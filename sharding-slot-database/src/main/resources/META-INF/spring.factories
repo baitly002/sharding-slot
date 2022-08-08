@@ -4,6 +4,5 @@ com.rlynic.sharding.slot.database.ShardingEnvironmentPostProcessor
 
 # Autoconfiguration
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.rlynic.sharding.slot.database.configuration.ShardingSphereAutoConfiguration,\
 com.rlynic.sharding.slot.database.configuration.ShardingAutoConfiguration
 

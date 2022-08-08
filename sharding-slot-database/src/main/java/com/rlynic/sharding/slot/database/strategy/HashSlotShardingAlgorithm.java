@@ -1,24 +1,16 @@
-/*
-  This file created at 2020/6/21.
-
-  Copyright (c) 2002-2020 crisis, Inc. All rights reserved.
- */
 package com.rlynic.sharding.slot.database.strategy;
 
 import com.rlynic.sharding.slot.database.configuration.ShardingAutoConfiguration;
-import org.apache.shardingsphere.api.sharding.standard.PreciseShardingAlgorithm;
-import org.apache.shardingsphere.api.sharding.standard.PreciseShardingValue;
+import org.apache.shardingsphere.sharding.api.sharding.standard.PreciseShardingValue;
+import org.apache.shardingsphere.sharding.api.sharding.standard.RangeShardingValue;
+import org.apache.shardingsphere.sharding.api.sharding.standard.StandardShardingAlgorithm;
 
 import java.util.Collection;
+import java.util.Properties;
 
-/**
- * <code>{@link HashSlotShardingAlgorithm}</code>
- *
- * @author crisis
- */
-public class HashSlotShardingAlgorithm implements PreciseShardingAlgorithm {
-
+public class HashSlotShardingAlgorithm implements StandardShardingAlgorithm<String> {
     private SlotDatabaseMatcher matcher;
+    public HashSlotShardingAlgorithm(){};
 
     @Override
     public String doSharding(Collection availableTargetNames, PreciseShardingValue shardingValue) {
@@ -29,4 +21,18 @@ public class HashSlotShardingAlgorithm implements PreciseShardingAlgorithm {
         return matcher.match(shardingValue.getValue());
     }
 
+    @Override
+    public Collection<String> doSharding(Collection availableTargetNames, RangeShardingValue shardingValue) {
+        return null;
+    }
+
+    @Override
+    public Properties getProps() {
+        return null;
+    }
+
+    @Override
+    public void init(Properties properties) {
+
+    }
 }
