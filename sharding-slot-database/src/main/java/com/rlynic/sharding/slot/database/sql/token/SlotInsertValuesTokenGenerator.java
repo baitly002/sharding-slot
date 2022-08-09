@@ -2,6 +2,9 @@ package com.rlynic.sharding.slot.database.sql.token;
 
 import lombok.Setter;
 import org.apache.shardingsphere.infra.binder.segment.insert.values.InsertValueContext;
+import org.apache.shardingsphere.infra.binder.segment.insert.values.expression.DerivedLiteralExpressionSegment;
+import org.apache.shardingsphere.infra.binder.segment.insert.values.expression.DerivedParameterMarkerExpressionSegment;
+import org.apache.shardingsphere.infra.binder.segment.insert.values.expression.DerivedSimpleExpressionSegment;
 import org.apache.shardingsphere.infra.binder.statement.SQLStatementContext;
 import org.apache.shardingsphere.infra.binder.statement.dml.InsertStatementContext;
 import org.apache.shardingsphere.infra.datanode.DataNode;
@@ -41,6 +44,19 @@ public final class SlotInsertValuesTokenGenerator implements OptionalSQLTokenGen
             Collection<DataNode> dataNodes = null == originalDataNodesIterator ? Collections.emptyList() : originalDataNodesIterator.next();
             result.getInsertValues().add(new SlotInsertValue(expressionSegments, dataNodes));
         }
+
+        int count = 0;
+        for (InsertValueContext each : insertStatementContext.getInsertValueContexts()) {
+//                InsertValue insertValueToken = result.get().getInsertValues().get(count);
+            DerivedSimpleExpressionSegment expressionSegment = isToAddDerivedLiteralExpression(insertStatementContext, count)
+                    ? new DerivedLiteralExpressionSegment(result) : new DerivedParameterMarkerExpressionSegment(each.getParameterCount());
+//                GroupedParameterBuilder builder = (GroupedParameterBuilder)sqlRewriteContext.getParameterBuilder();
+//                insertStatementContext.getValueExpressions().get(count).add(expressionSegment);
+            each.getValueExpressions().add(expressionSegment);
+//                insertValueToken.getValues().add(expressionSegment);
+//                System.out.println(each.getParameterIndex(0));
+            count++;
+        }
         return result;
     }
 
@@ -58,5 +74,9 @@ public final class SlotInsertValuesTokenGenerator implements OptionalSQLTokenGen
             result = Math.max(result, each.getStopIndex());
         }
         return result;
+    }
+
+    private boolean isToAddDerivedLiteralExpression(final InsertStatementContext insertStatementContext, final int insertValueCount) {
+        return insertStatementContext.getGroupedParameters().get(insertValueCount).isEmpty();
     }
 }
