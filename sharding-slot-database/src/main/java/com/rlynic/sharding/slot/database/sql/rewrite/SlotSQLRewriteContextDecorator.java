@@ -103,7 +103,7 @@ public class SlotSQLRewriteContextDecorator implements SQLRewriteContextDecorato
             rewriteParameters(sqlRewriteContext, parameterRewriters);
         }
         sqlRewriteContext.addSQLTokenGenerators(new SlotTokenGenerateBuilder(shardingRule, routeContext, sqlRewriteContext.getSqlStatementContext()).getSQLTokenGenerators());
-        System.out.println("处理sql->:"+sqlRewriteContext.getSql());
+//        System.out.println("处理sql->:"+sqlRewriteContext.getSql());
 //        SQLRewriteEntry
         //最终生成的语句操作在 -> SQLRewriteEntry.rewrite()
     }

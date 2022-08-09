@@ -1,7 +1,6 @@
 package com.rlynic.sharding.slot.database.sql.rewrite;
 
-import com.rlynic.sharding.slot.database.sql.token.SlotInsertColumnTokenGenerator;
-import com.rlynic.sharding.slot.database.sql.token.SlotInsertValuesTokenGenerator;
+import com.rlynic.sharding.slot.database.sql.token.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.shardingsphere.infra.binder.statement.SQLStatementContext;
 import org.apache.shardingsphere.infra.rewrite.sql.token.generator.SQLTokenGenerator;
@@ -17,7 +16,6 @@ import org.apache.shardingsphere.sharding.rewrite.token.generator.impl.keygen.Ge
 import org.apache.shardingsphere.sharding.rule.ShardingRule;
 import org.apache.shardingsphere.sharding.rule.aware.ShardingRuleAware;
 
-import javax.security.auth.login.CredentialException;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -50,8 +48,11 @@ public final class SlotTokenGenerateBuilder implements SQLTokenGeneratorBuilder 
         addSQLTokenGenerator(result, new GeneratedKeyInsertValuesTokenGenerator());
         addSQLTokenGenerator(result, new ShardingRemoveTokenGenerator());
         addSQLTokenGenerator(result, new CursorTokenGenerator());
-        result.add(new SlotInsertColumnTokenGenerator());
-        result.add(new SlotInsertValuesTokenGenerator());
+//        result.add(new SlotInsertColumnTokenGenerator());
+//        result.add(new SlotInsertValuesTokenGenerator());
+        result.add(new ShardingSlotInsertColumnTokenGenerator());
+        result.add(new TransformSlotInsertValuesTokenGenerator());
+        result.add(new ShardingSlotInsertValuesTokenGenerator());
         return result;
     }
 
