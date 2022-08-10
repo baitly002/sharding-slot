@@ -1,6 +1,5 @@
 package com.rlynic.sharding.slot.database.sql.rewrite.parameter;
 
-import lombok.RequiredArgsConstructor;
 import org.apache.shardingsphere.infra.binder.statement.SQLStatementContext;
 import org.apache.shardingsphere.infra.metadata.database.schema.decorator.model.ShardingSphereSchema;
 import org.apache.shardingsphere.infra.rewrite.parameter.rewriter.ParameterRewriter;
@@ -15,6 +14,9 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map;
 
+/**
+ * 注入字段值入口
+ */
 public final class ShardingSlotParameterRewriterBuilder implements ParameterRewriterBuilder {
 
     private final ShardingRule shardingRule;
@@ -37,7 +39,6 @@ public final class ShardingSlotParameterRewriterBuilder implements ParameterRewr
     public Collection<ParameterRewriter> getParameterRewriters() {
         Collection<ParameterRewriter> result = new LinkedList<>();
         addParameterRewriter(result, new ShardingSlotInsertValueParameterRewriter());
-//        addParameterRewriter(result, new ShardingPaginationSlotParameterRewriter());
         return result;
     }
 

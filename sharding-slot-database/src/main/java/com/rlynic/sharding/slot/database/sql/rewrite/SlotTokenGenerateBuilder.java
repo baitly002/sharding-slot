@@ -45,23 +45,17 @@ public final class SlotTokenGenerateBuilder implements SQLTokenGeneratorBuilder 
         addSQLTokenGenerator(result, new ConstraintTokenGenerator());
         addSQLTokenGenerator(result, new OffsetTokenGenerator());
         addSQLTokenGenerator(result, new RowCountTokenGenerator());
-//        addSQLTokenGenerator(result, new ShardingSlotInsertColumnTokenGenerator());
         addSQLTokenGenerator(result, new GeneratedKeyInsertColumnTokenGenerator());
         addSQLTokenGenerator(result, new GeneratedKeyForUseDefaultInsertColumnsTokenGenerator());
         addSQLTokenGenerator(result, new GeneratedKeyAssignmentTokenGenerator());
-//        addSQLTokenGenerator(result, new TransformSlotInsertValuesTokenGenerator());
-//        addSQLTokenGenerator(result, new ShardingSlotInsertValuesTokenGenerator());
         addSQLTokenGenerator(result, new GeneratedKeyInsertValuesTokenGenerator());
         addSQLTokenGenerator(result, new ShardingRemoveTokenGenerator());
         addSQLTokenGenerator(result, new CursorTokenGenerator());
-        result.add(new ShardingSlotInsertColumnTokenGenerator());
+        addSQLTokenGenerator(result, new ShardingSlotInsertColumnTokenGenerator());
         TransformSlotInsertValuesTokenGenerator transformSlotInsertValuesTokenGenerator = new TransformSlotInsertValuesTokenGenerator();
         transformSlotInsertValuesTokenGenerator.setRouteContext(routeContext);
-        result.add(transformSlotInsertValuesTokenGenerator);
-//        ShardingSlot2InsertValuesTokenGenerator slotInsertValuesTokenGenerator = new ShardingSlot2InsertValuesTokenGenerator();
-//        slotInsertValuesTokenGenerator.setRouteContext(routeContext);
-//        result.add(slotInsertValuesTokenGenerator);
-        result.add(new ShardingSlotInsertValuesTokenGenerator());
+        addSQLTokenGenerator(result, transformSlotInsertValuesTokenGenerator);
+        addSQLTokenGenerator(result, new ShardingSlotInsertValuesTokenGenerator());
         return result;
     }
 

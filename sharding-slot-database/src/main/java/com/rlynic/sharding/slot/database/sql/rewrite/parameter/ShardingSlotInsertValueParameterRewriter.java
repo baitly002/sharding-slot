@@ -1,9 +1,9 @@
 package com.rlynic.sharding.slot.database.sql.rewrite.parameter;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
+
 import com.rlynic.sharding.slot.database.SlotContextHolder;
 import com.rlynic.sharding.slot.database.configuration.ShardingAutoConfiguration;
 import com.rlynic.sharding.slot.database.configuration.SlotShardingProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.shardingsphere.infra.binder.statement.SQLStatementContext;
 import org.apache.shardingsphere.infra.binder.statement.dml.InsertStatementContext;
@@ -19,9 +19,10 @@ import java.util.List;
 
 /**
  * <code>{@link ShardingSlotInsertValueParameterRewriter}</code>
- *
+ * 注入slot字段值
  * @author crisis
  */
+@Slf4j
 public class ShardingSlotInsertValueParameterRewriter implements ParameterRewriter<InsertStatementContext> {
     private SlotShardingProperties slotShardingProperties;
 
@@ -31,6 +32,7 @@ public class ShardingSlotInsertValueParameterRewriter implements ParameterRewrit
             slotShardingProperties = ShardingAutoConfiguration.context.getBean(SlotShardingProperties.class);
         }
         return sqlStatementContext instanceof InsertStatementContext
+                && !((InsertStatementContext)sqlStatementContext).getColumnNames().contains(slotShardingProperties.getColumn())
                 && slotShardingProperties.getTableNames().contains(((InsertStatement) sqlStatementContext.getSqlStatement()).getTable().getTableName().getIdentifier().getValue());
     }
 
@@ -42,26 +44,6 @@ public class ShardingSlotInsertValueParameterRewriter implements ParameterRewrit
                 return;
             }
             Iterator<Integer> slots = slotsContext.iterator();
-//            int count = 0;
-
-//            List<String> columnNames = sqlStatementContext.getColumnNames();
-//            int cIndex = columnNames.indexOf(slotShardingProperties.getColumn()) + 1;
-//            for (List<Object> each : sqlStatementContext.getGroupedParameters()) {
-//                if (cIndex <= 0) {
-//                    cIndex = ((GroupedParameterBuilder) parameterBuilder).getParameterBuilders().get(count).getParameters().size();
-//                }
-//
-//                Comparable<?> generatedValue = slots.next();
-//                if (!each.isEmpty()) {
-//                    ((GroupedParameterBuilder) parameterBuilder).getParameterBuilders().get(count)
-//                            .addAddedParameters(cIndex, Lists.newArrayList(generatedValue));
-//                }
-//                count++;
-//            }
-
-//            ((GroupedParameterBuilder) parameterBuilder).setDerivedColumnName(insertStatementContext.getGeneratedKeyContext().get().getColumnName());
-//            Iterator<Comparable<?>> generatedValues = insertStatementContext.getGeneratedKeyContext().get().getGeneratedValues().iterator();
-
             int count = 0;
             int parameterCount = 0;
             for (List<Object> each : insertStatementContext.getGroupedParameters()) {
@@ -73,7 +55,7 @@ public class ShardingSlotInsertValueParameterRewriter implements ParameterRewrit
                 count++;
             }
         }catch (Exception e){
-
+            log.error("注入slot时发生异常，请检查！", e);
         }finally {
             SlotContextHolder.clear();
         }

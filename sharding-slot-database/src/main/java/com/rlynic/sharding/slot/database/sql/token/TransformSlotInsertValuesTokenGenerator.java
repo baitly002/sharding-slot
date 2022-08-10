@@ -1,10 +1,9 @@
 package com.rlynic.sharding.slot.database.sql.token;
 
+import com.rlynic.sharding.slot.database.configuration.ShardingAutoConfiguration;
+import com.rlynic.sharding.slot.database.configuration.SlotShardingProperties;
 import lombok.Setter;
 import org.apache.shardingsphere.infra.binder.segment.insert.values.InsertValueContext;
-import org.apache.shardingsphere.infra.binder.segment.insert.values.expression.DerivedLiteralExpressionSegment;
-import org.apache.shardingsphere.infra.binder.segment.insert.values.expression.DerivedParameterMarkerExpressionSegment;
-import org.apache.shardingsphere.infra.binder.segment.insert.values.expression.DerivedSimpleExpressionSegment;
 import org.apache.shardingsphere.infra.binder.statement.SQLStatementContext;
 import org.apache.shardingsphere.infra.binder.statement.dml.InsertStatementContext;
 import org.apache.shardingsphere.infra.datanode.DataNode;
@@ -24,10 +23,22 @@ import java.util.List;
 public final class TransformSlotInsertValuesTokenGenerator implements OptionalSQLTokenGenerator<InsertStatementContext>, RouteContextAware {
 
     private RouteContext routeContext;
+    private SlotShardingProperties slotShardingProperties;
 
     @Override
     public boolean isGenerateSQLToken(final SQLStatementContext<?> sqlStatementContext) {
-        return sqlStatementContext instanceof InsertStatementContext && !(((InsertStatementContext) sqlStatementContext).getSqlStatement()).getValues().isEmpty();
+        if(null == slotShardingProperties){
+            slotShardingProperties = ShardingAutoConfiguration.context.getBean(SlotShardingProperties.class);
+        }
+        if(sqlStatementContext instanceof InsertStatementContext){
+            InsertStatementContext insertStatementContext = (InsertStatementContext) sqlStatementContext;
+            return !insertStatementContext.getSqlStatement().getValues().isEmpty()
+                    && slotShardingProperties != null
+                    && !insertStatementContext.getColumnNames().contains(slotShardingProperties.getColumn())
+                    && slotShardingProperties.getTableNames().contains(insertStatementContext.getSqlStatement().getTable().getTableName().getIdentifier().getValue());
+        }else{
+            return false;
+        }
     }
 
     @Override
