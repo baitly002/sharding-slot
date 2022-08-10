@@ -15,7 +15,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map;
 
-@RequiredArgsConstructor
 public final class ShardingSlotParameterRewriterBuilder implements ParameterRewriterBuilder {
 
     private final ShardingRule shardingRule;
@@ -26,11 +25,19 @@ public final class ShardingSlotParameterRewriterBuilder implements ParameterRewr
 
     private final SQLStatementContext<?> sqlStatementContext;
 
+    public ShardingSlotParameterRewriterBuilder(ShardingRule shardingRule, RouteContext routeContext, Map<String, ShardingSphereSchema> schemas, SQLStatementContext<?> sqlStatementContext) {
+        this.shardingRule = shardingRule;
+        this.routeContext = routeContext;
+        this.schemas = schemas;
+        this.sqlStatementContext = sqlStatementContext;
+    }
+
     @SuppressWarnings("rawtypes")
     @Override
     public Collection<ParameterRewriter> getParameterRewriters() {
         Collection<ParameterRewriter> result = new LinkedList<>();
         addParameterRewriter(result, new ShardingSlotInsertValueParameterRewriter());
+//        addParameterRewriter(result, new ShardingPaginationSlotParameterRewriter());
         return result;
     }
 

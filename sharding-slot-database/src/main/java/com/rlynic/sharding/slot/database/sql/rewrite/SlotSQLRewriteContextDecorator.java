@@ -1,31 +1,16 @@
 package com.rlynic.sharding.slot.database.sql.rewrite;
 
-import com.google.common.collect.Lists;
-import com.rlynic.sharding.slot.database.SlotContextHolder;
-import com.rlynic.sharding.slot.database.configuration.ShardingAutoConfiguration;
 import com.rlynic.sharding.slot.database.configuration.SlotShardingProperties;
 import com.rlynic.sharding.slot.database.sql.rewrite.parameter.ShardingSlotParameterRewriterBuilder;
-import org.apache.shardingsphere.infra.binder.segment.insert.values.InsertValueContext;
-import org.apache.shardingsphere.infra.binder.segment.insert.values.expression.DerivedLiteralExpressionSegment;
-import org.apache.shardingsphere.infra.binder.segment.insert.values.expression.DerivedParameterMarkerExpressionSegment;
-import org.apache.shardingsphere.infra.binder.segment.insert.values.expression.DerivedSimpleExpressionSegment;
 import org.apache.shardingsphere.infra.binder.statement.dml.InsertStatementContext;
 import org.apache.shardingsphere.infra.config.props.ConfigurationProperties;
-import org.apache.shardingsphere.infra.rewrite.SQLRewriteEntry;
 import org.apache.shardingsphere.infra.rewrite.context.SQLRewriteContext;
 import org.apache.shardingsphere.infra.rewrite.context.SQLRewriteContextDecorator;
-import org.apache.shardingsphere.infra.rewrite.parameter.builder.impl.GroupedParameterBuilder;
 import org.apache.shardingsphere.infra.rewrite.parameter.rewriter.ParameterRewriter;
 import org.apache.shardingsphere.infra.route.context.RouteContext;
-import org.apache.shardingsphere.sharding.rewrite.parameter.ShardingParameterRewriterBuilder;
 import org.apache.shardingsphere.sharding.rule.ShardingRule;
-import org.apache.shardingsphere.sql.parser.api.CacheOption;
-import org.apache.shardingsphere.sql.parser.api.SQLParserEngine;
-import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 
 public class SlotSQLRewriteContextDecorator implements SQLRewriteContextDecorator<ShardingRule> {
 
@@ -33,6 +18,7 @@ public class SlotSQLRewriteContextDecorator implements SQLRewriteContextDecorato
 
     @Override
     public void decorate(ShardingRule shardingRule, ConfigurationProperties configurationProperties, SQLRewriteContext sqlRewriteContext, RouteContext routeContext) {
+
 //        try {
 //            if (sqlRewriteContext.getSqlStatementContext() instanceof InsertStatementContext) {
 //
@@ -73,7 +59,6 @@ public class SlotSQLRewriteContextDecorator implements SQLRewriteContextDecorato
 //                    count++;
 //                }
 //
-////                slots = slotsContext.iterator();
 //                count = 0;
 //                for (InsertValueContext each : insertStatementContext.getInsertValueContexts()) {
 ////                InsertValue insertValueToken = result.get().getInsertValues().get(count);
@@ -103,11 +88,12 @@ public class SlotSQLRewriteContextDecorator implements SQLRewriteContextDecorato
             rewriteParameters(sqlRewriteContext, parameterRewriters);
         }
         sqlRewriteContext.addSQLTokenGenerators(new SlotTokenGenerateBuilder(shardingRule, routeContext, sqlRewriteContext.getSqlStatementContext()).getSQLTokenGenerators());
-//        System.out.println("处理sql->:"+sqlRewriteContext.getSql());
-//        SQLRewriteEntry
-        //最终生成的语句操作在 -> SQLRewriteEntry.rewrite()
-    }
 
+        //最终生成的语句操作在 -> SQLRewriteEntry.rewrite()
+//        ShardingSQLRouter
+//        ShardingSQLRouter
+//        ShardingResultMergerEngine
+    }
     private boolean isToAddDerivedLiteralExpression(final InsertStatementContext insertStatementContext, final int insertValueCount) {
         return insertStatementContext.getGroupedParameters().get(insertValueCount).isEmpty();
     }

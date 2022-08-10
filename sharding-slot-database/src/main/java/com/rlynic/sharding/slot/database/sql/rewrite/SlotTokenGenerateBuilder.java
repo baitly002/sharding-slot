@@ -1,7 +1,6 @@
 package com.rlynic.sharding.slot.database.sql.rewrite;
 
 import com.rlynic.sharding.slot.database.sql.token.*;
-import lombok.RequiredArgsConstructor;
 import org.apache.shardingsphere.infra.binder.statement.SQLStatementContext;
 import org.apache.shardingsphere.infra.rewrite.sql.token.generator.SQLTokenGenerator;
 import org.apache.shardingsphere.infra.rewrite.sql.token.generator.aware.RouteContextAware;
@@ -19,7 +18,6 @@ import org.apache.shardingsphere.sharding.rule.aware.ShardingRuleAware;
 import java.util.Collection;
 import java.util.LinkedList;
 
-@RequiredArgsConstructor
 public final class SlotTokenGenerateBuilder implements SQLTokenGeneratorBuilder {
 
     private final ShardingRule shardingRule;
@@ -27,6 +25,13 @@ public final class SlotTokenGenerateBuilder implements SQLTokenGeneratorBuilder 
     private final RouteContext routeContext;
 
     private final SQLStatementContext<?> sqlStatementContext;
+
+    public SlotTokenGenerateBuilder(ShardingRule shardingRule, RouteContext routeContext, SQLStatementContext<?> sqlStatementContext) {
+        this.shardingRule = shardingRule;
+        this.routeContext = routeContext;
+        this.sqlStatementContext = sqlStatementContext;
+    }
+
 
     @Override
     public Collection<SQLTokenGenerator> getSQLTokenGenerators() {
@@ -40,18 +45,22 @@ public final class SlotTokenGenerateBuilder implements SQLTokenGeneratorBuilder 
         addSQLTokenGenerator(result, new ConstraintTokenGenerator());
         addSQLTokenGenerator(result, new OffsetTokenGenerator());
         addSQLTokenGenerator(result, new RowCountTokenGenerator());
-//        addSQLTokenGenerator(result, new SlotInsertColumnTokenGenerator());
+//        addSQLTokenGenerator(result, new ShardingSlotInsertColumnTokenGenerator());
         addSQLTokenGenerator(result, new GeneratedKeyInsertColumnTokenGenerator());
         addSQLTokenGenerator(result, new GeneratedKeyForUseDefaultInsertColumnsTokenGenerator());
         addSQLTokenGenerator(result, new GeneratedKeyAssignmentTokenGenerator());
-//        addSQLTokenGenerator(result, new SlotInsertValuesTokenGenerator());
+//        addSQLTokenGenerator(result, new TransformSlotInsertValuesTokenGenerator());
+//        addSQLTokenGenerator(result, new ShardingSlotInsertValuesTokenGenerator());
         addSQLTokenGenerator(result, new GeneratedKeyInsertValuesTokenGenerator());
         addSQLTokenGenerator(result, new ShardingRemoveTokenGenerator());
         addSQLTokenGenerator(result, new CursorTokenGenerator());
-//        result.add(new SlotInsertColumnTokenGenerator());
-//        result.add(new SlotInsertValuesTokenGenerator());
         result.add(new ShardingSlotInsertColumnTokenGenerator());
-        result.add(new TransformSlotInsertValuesTokenGenerator());
+        TransformSlotInsertValuesTokenGenerator transformSlotInsertValuesTokenGenerator = new TransformSlotInsertValuesTokenGenerator();
+        transformSlotInsertValuesTokenGenerator.setRouteContext(routeContext);
+        result.add(transformSlotInsertValuesTokenGenerator);
+//        ShardingSlot2InsertValuesTokenGenerator slotInsertValuesTokenGenerator = new ShardingSlot2InsertValuesTokenGenerator();
+//        slotInsertValuesTokenGenerator.setRouteContext(routeContext);
+//        result.add(slotInsertValuesTokenGenerator);
         result.add(new ShardingSlotInsertValuesTokenGenerator());
         return result;
     }
