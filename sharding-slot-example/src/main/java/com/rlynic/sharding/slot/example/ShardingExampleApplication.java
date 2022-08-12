@@ -37,6 +37,7 @@ import java.util.List;
         scanBasePackages = "com.rlynic.sharding.slot.example",
         exclude = JtaAutoConfiguration.class
 )
+@MapperScan(basePackages = "com.rlynic.sharding.slot.example.repositories")
 public class ShardingExampleApplication {
 
 
@@ -46,67 +47,67 @@ public class ShardingExampleApplication {
         }
     }
 
-    @Configuration
-    @MapperScan(basePackages = "com.rlynic.sharding.slot.example.repositories", sqlSessionFactoryRef = "shardingSqlSessionFactory")
-    public static class MybatisConfiguration{
-        private final MybatisProperties properties;
-
-        private final ResourceLoader resourceLoader;
-
-        private final DatabaseIdProvider databaseIdProvider;
-
-        private final List<ConfigurationCustomizer> configurationCustomizers;
-
-        public MybatisConfiguration(
-                MybatisProperties properties,
-                ResourceLoader resourceLoader,
-                ObjectProvider<DatabaseIdProvider> databaseIdProvider,
-                ObjectProvider<List<ConfigurationCustomizer>> configurationCustomizersProvider) {
-            this.properties = properties;
-            this.resourceLoader = resourceLoader;
-            this.databaseIdProvider = databaseIdProvider.getIfAvailable();
-            this.configurationCustomizers = configurationCustomizersProvider
-                    .getIfAvailable();
-        }
-
-        @Bean(name = "shardingSqlSessionFactory")
-        public SqlSessionFactory basicSqlSessionFactory(@Qualifier("shardingDataSource") DataSource basicDataSource) throws Exception {
-            SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
-            factoryBean.setDataSource(basicDataSource);
-
-            return generateSessionFactory(factoryBean);
-        }
-
-        private SqlSessionFactory generateSessionFactory(SqlSessionFactoryBean factory) throws Exception {
-            factory.setVfs(SpringBootVFS.class);
-            if (StringUtils.hasText(properties.getConfigLocation())) {
-                factory.setConfigLocation(resourceLoader
-                        .getResource(properties.getConfigLocation()));
-            }
-            if (properties.getConfigurationProperties() != null) {
-                factory.setConfigurationProperties(properties
-                        .getConfigurationProperties());
-            }
-            if (databaseIdProvider != null) {
-                factory.setDatabaseIdProvider(databaseIdProvider);
-            }
-            if (StringUtils.hasLength(properties.getTypeAliasesPackage())) {
-                factory.setTypeAliasesPackage(this.properties
-                        .getTypeAliasesPackage());
-            }
-            if (StringUtils.hasLength(properties.getTypeHandlersPackage())) {
-                factory.setTypeHandlersPackage(properties
-                        .getTypeHandlersPackage());
-            }
-            if (!ObjectUtils.isEmpty(properties.resolveMapperLocations())) {
-                factory.setMapperLocations(properties.resolveMapperLocations());
-            }
-
-            factory.getObject().getConfiguration().setMapUnderscoreToCamelCase(true);
-
-            return factory.getObject();
-        }
-    }
+//    @Configuration
+//    @MapperScan(basePackages = "com.rlynic.sharding.slot.example.repositories", sqlSessionFactoryRef = "shardingSqlSessionFactory")
+//    public static class MybatisConfiguration{
+//        private final MybatisProperties properties;
+//
+//        private final ResourceLoader resourceLoader;
+//
+//        private final DatabaseIdProvider databaseIdProvider;
+//
+//        private final List<ConfigurationCustomizer> configurationCustomizers;
+//
+//        public MybatisConfiguration(
+//                MybatisProperties properties,
+//                ResourceLoader resourceLoader,
+//                ObjectProvider<DatabaseIdProvider> databaseIdProvider,
+//                ObjectProvider<List<ConfigurationCustomizer>> configurationCustomizersProvider) {
+//            this.properties = properties;
+//            this.resourceLoader = resourceLoader;
+//            this.databaseIdProvider = databaseIdProvider.getIfAvailable();
+//            this.configurationCustomizers = configurationCustomizersProvider
+//                    .getIfAvailable();
+//        }
+//
+//        @Bean(name = "shardingSqlSessionFactory")
+//        public SqlSessionFactory basicSqlSessionFactory(@Qualifier("shardingDataSource") DataSource basicDataSource) throws Exception {
+//            SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
+//            factoryBean.setDataSource(basicDataSource);
+//
+//            return generateSessionFactory(factoryBean);
+//        }
+//
+//        private SqlSessionFactory generateSessionFactory(SqlSessionFactoryBean factory) throws Exception {
+//            factory.setVfs(SpringBootVFS.class);
+//            if (StringUtils.hasText(properties.getConfigLocation())) {
+//                factory.setConfigLocation(resourceLoader
+//                        .getResource(properties.getConfigLocation()));
+//            }
+//            if (properties.getConfigurationProperties() != null) {
+//                factory.setConfigurationProperties(properties
+//                        .getConfigurationProperties());
+//            }
+//            if (databaseIdProvider != null) {
+//                factory.setDatabaseIdProvider(databaseIdProvider);
+//            }
+//            if (StringUtils.hasLength(properties.getTypeAliasesPackage())) {
+//                factory.setTypeAliasesPackage(this.properties
+//                        .getTypeAliasesPackage());
+//            }
+//            if (StringUtils.hasLength(properties.getTypeHandlersPackage())) {
+//                factory.setTypeHandlersPackage(properties
+//                        .getTypeHandlersPackage());
+//            }
+//            if (!ObjectUtils.isEmpty(properties.resolveMapperLocations())) {
+//                factory.setMapperLocations(properties.resolveMapperLocations());
+//            }
+//
+//            factory.getObject().getConfiguration().setMapUnderscoreToCamelCase(true);
+//
+//            return factory.getObject();
+//        }
+//    }
 
 
 }

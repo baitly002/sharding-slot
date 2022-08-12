@@ -1,0 +1,87 @@
+spring:
+  profiles:
+#    active: sharding-databases
+  datasource:
+    hikari:
+      minimum-idle: 10
+      maximum-pool-size: 150
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+  shardingsphere:
+    enabled: true
+    mode:
+      type: Memory
+    datasource:
+      names: ds-0,ds-1,ds-2
+      ds-0:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://10.201.62.180:3306/demo_ds?characterEncoding=utf-8&useSSL=false&autoReconnect=true&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true&useInformationSchema=false
+        username: root
+        password: Bingo@123
+        maximum-pool-size: 150
+        minimum-idle: 10
+      ds-1:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://10.201.62.180:3306/demo_ds_1?characterEncoding=utf-8&useSSL=false&autoReconnect=true&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true&useInformationSchema=false
+        username: root
+        password: Bingo@123
+        maximum-pool-size: 150
+        minimum-idle: 10
+      ds-2:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://10.201.62.180:3306/demo_ds_2?characterEncoding=utf-8&useSSL=false&autoReconnect=true&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true&useInformationSchema=false
+        username: root
+        password: Bingo@123
+        maximum-pool-size: 150
+        minimum-idle: 10
+    rules:
+      sharding:
+        default-database-strategy:
+          standard:
+            sharding-column: order_id
+            sharding-algorithm-name: slotAlgorithm
+        sharding-algorithms:
+          slotAlgorithm:
+            props:
+              strategy: standard
+              algorithmClassName: com.rlynic.sharding.slot.database.strategy.HashSlotShardingAlgorithm
+            type: CLASS_BASED
+        binding-tables: t_order,t_order_item
+        tables:
+          t_order:
+#            tableStrategy:
+#              standard:
+#                shardingColumn: order_id
+#                shardingAlgorithmName: slotAlgorithm
+            actual-data-nodes: ds-$->{0..2}.t_order
+            keyGenerateStrategy:
+              column: order_id
+              keyGeneratorName: snowflake
+          t_order_item:
+            actual-data-nodes: ds-$->{0..2}.t_order_item
+#            tableStrategy:
+#              standard:
+#                shardingColumn: order_item_id
+#                shardingAlgorithmName: slotAlgorithm
+            keyGenerateStrategy:
+              column: order_item_id
+              keyGeneratorName: snowflake
+        key-generators:
+          snowflake:
+            type: SNOWFLAKE
+
+mybatis:
+  config-location: classpath:META-INF/mybatis-config.xml
+logging:
+  level:
+    root: debug
+slot:
+  sharding:
+    range:
+      datasource:
+        ds-0: "{0, 5461}"
+        ds-1: "{5462, 10921}"
+        ds-2: "{10922, 16383}"
