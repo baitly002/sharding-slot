@@ -11,6 +11,7 @@ import org.apache.shardingsphere.infra.rewrite.sql.token.generator.OptionalSQLTo
 import org.apache.shardingsphere.infra.rewrite.sql.token.generator.aware.RouteContextAware;
 import org.apache.shardingsphere.infra.rewrite.sql.token.pojo.generic.InsertValuesToken;
 import org.apache.shardingsphere.infra.route.context.RouteContext;
+import org.apache.shardingsphere.sharding.rewrite.token.pojo.ShardingInsertValue;
 import org.apache.shardingsphere.sql.parser.sql.common.segment.dml.assignment.InsertValuesSegment;
 import org.apache.shardingsphere.sql.parser.sql.common.segment.dml.expr.ExpressionSegment;
 

@@ -48,9 +48,11 @@ public final class SlotTokenGenerateBuilder implements SQLTokenGeneratorBuilder 
         addSQLTokenGenerator(result, new GeneratedKeyInsertColumnTokenGenerator());
         addSQLTokenGenerator(result, new GeneratedKeyForUseDefaultInsertColumnsTokenGenerator());
         addSQLTokenGenerator(result, new GeneratedKeyAssignmentTokenGenerator());
-        addSQLTokenGenerator(result, new GeneratedKeyInsertValuesTokenGenerator());
+//        addSQLTokenGenerator(result, new ShardingInsertValuesTokenGenerator());
+//        addSQLTokenGenerator(result, new GeneratedKeyInsertValuesTokenGenerator());
         addSQLTokenGenerator(result, new ShardingRemoveTokenGenerator());
         addSQLTokenGenerator(result, new CursorTokenGenerator());
+
         addSQLTokenGenerator(result, new ShardingSlotInsertColumnTokenGenerator());
         TransformSlotInsertValuesTokenGenerator transformSlotInsertValuesTokenGenerator = new TransformSlotInsertValuesTokenGenerator();
         transformSlotInsertValuesTokenGenerator.setRouteContext(routeContext);

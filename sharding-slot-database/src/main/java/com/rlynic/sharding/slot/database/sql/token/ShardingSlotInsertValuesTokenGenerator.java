@@ -38,9 +38,20 @@ public final class ShardingSlotInsertValuesTokenGenerator extends AbstractBaseSl
         List<List<Object>> parameters = insertStatementContext.getGroupedParameters();
         for (InsertValueContext each : insertStatementContext.getInsertValueContexts()) {
             InsertValue insertValueToken = result.get().getInsertValues().get(count);
+            //----start-------兼容GeneratedKey注入
+            int parameterCount = each.getParameterCount();
+            if(insertStatementContext.getGeneratedKeyContext().isPresent()){
+                DerivedSimpleExpressionSegment expressionSegment = isToAddDerivedLiteralExpression(parameters, count)
+                        ? new DerivedLiteralExpressionSegment(each.getValue(count))
+                        : new DerivedParameterMarkerExpressionSegment(parameterCount);
+                insertValueToken.getValues().add(expressionSegment);
+                parameterCount+=1;
+            }
+            //----end-------
+
             DerivedSimpleExpressionSegment expressionSegment = isToAddDerivedLiteralExpression(parameters, count)
                     ? new DerivedLiteralExpressionSegment(each.getValue(count))
-                    : new DerivedParameterMarkerExpressionSegment(each.getParameterCount());
+                    : new DerivedParameterMarkerExpressionSegment(parameterCount);
             insertValueToken.getValues().add(expressionSegment);
             count++;
         }
@@ -49,7 +60,7 @@ public final class ShardingSlotInsertValuesTokenGenerator extends AbstractBaseSl
 
     private Optional<InsertValuesToken> findPreviousSQLToken() {
         for (SQLToken each : previousSQLTokens) {
-            if (each instanceof InsertValuesToken) {
+            if (each instanceof SlotInsertValuesToken) {
                 return Optional.of((InsertValuesToken) each);
             }
         }

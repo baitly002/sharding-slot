@@ -50,6 +50,12 @@ public class ShardingSlotInsertValueParameterRewriter implements ParameterRewrit
                 parameterCount += insertStatementContext.getInsertValueContexts().get(count).getParameterCount();
                 Comparable<?> generatedValue = slots.next();
                 if (!each.isEmpty()) {
+                    //-- -start-------兼容GeneratedKey注入
+                    if(insertStatementContext.getGeneratedKeyContext().isPresent()){
+                        parameterCount += 1;
+                    }
+                    //-----end--------
+
                     ((GroupedParameterBuilder) parameterBuilder).getParameterBuilders().get(count).addAddedParameters(parameterCount, new ArrayList<>(Collections.singleton(generatedValue)));
                 }
                 count++;
