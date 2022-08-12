@@ -27,6 +27,11 @@ public class HashSlotShardingAlgorithm implements StandardShardingAlgorithm<Stri
     }
 
     @Override
+    public String getType() {
+        return "HASH_SLOT";
+    }
+
+    @Override
     public Properties getProps() {
         return null;
     }

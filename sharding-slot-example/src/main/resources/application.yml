@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: sharding-test
   profiles:
 #    active: sharding-databases
   datasource:
@@ -7,6 +9,9 @@ spring:
       maximum-pool-size: 150
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://10.201.62.180:3306/demo_ds?characterEncoding=utf-8&useSSL=false&autoReconnect=true&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true&useInformationSchema=false
+    username: root
+    password: Bingo@123
   shardingsphere:
     enabled: true
     mode:
