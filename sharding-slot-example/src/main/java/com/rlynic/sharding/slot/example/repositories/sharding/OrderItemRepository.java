@@ -15,17 +15,13 @@
  * limitations under the License.
  */
 
-package com.rlynic.sharding.slot.example;
+package com.rlynic.sharding.slot.example.repositories.sharding;
 
-public final class ExampleExecuteTemplate {
-    
-    public static void run(final ExampleService exampleService) throws Exception {
-        try {
-            exampleService.initEnvironment();
-            exampleService.processSuccess();
-            exampleService.processSeataFail();
-        } finally {
-//            exampleService.cleanEnvironment();
-        }
-    }
+
+import com.rlynic.sharding.slot.example.entities.OrderItem;
+import com.rlynic.sharding.slot.example.repositories.CommonRepository;
+import org.apache.ibatis.annotations.Mapper;
+
+@Mapper
+public interface OrderItemRepository extends CommonRepository<OrderItem, Long> {
 }

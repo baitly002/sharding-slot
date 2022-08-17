@@ -15,17 +15,25 @@
  * limitations under the License.
  */
 
-package com.rlynic.sharding.slot.example;
+package com.rlynic.sharding.slot.example.repositories.master;
 
-public final class ExampleExecuteTemplate {
-    
-    public static void run(final ExampleService exampleService) throws Exception {
-        try {
-            exampleService.initEnvironment();
-            exampleService.processSuccess();
-            exampleService.processSeataFail();
-        } finally {
-//            exampleService.cleanEnvironment();
-        }
-    }
+
+import com.rlynic.sharding.slot.example.entities.Order;
+import com.rlynic.sharding.slot.example.repositories.CommonRepository;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.sql.SQLException;
+import java.util.List;
+
+@Mapper
+public interface MasterOrderRepository extends CommonRepository<Order, Long> {
+
+    /**
+     * insert data.
+     *
+     * @param orders entity
+     * @return generated primary key
+     * @throws SQLException SQL exception
+     */
+    Long batchInsert(List<Order> orders) throws SQLException;
 }

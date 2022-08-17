@@ -26,7 +26,7 @@ public interface ExampleService {
      * 
      * @throws SQLException SQL exception
      */
-    void initEnvironment() throws SQLException;
+    void initEnvironment() throws SQLException, InterruptedException;
     
     /**
      * Clean environment.
@@ -41,6 +41,13 @@ public interface ExampleService {
      * @throws SQLException SQL exception
      */
     void processSuccess() throws SQLException;
+
+    /**
+     * Process success.
+     *
+     * @throws SQLException SQL exception
+     */
+    void processSeataFail() throws Exception;
     
     /**
      * Process failure.

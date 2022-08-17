@@ -28,6 +28,8 @@ public interface CommonRepository<T, P> {
      * @throws SQLException SQL exception
      */
     void createTableIfNotExists() throws SQLException;
+
+    void createTableIfNotExistsUndoLog() throws  SQLException;
     
     /**
      * Drop table.
@@ -59,6 +61,8 @@ public interface CommonRepository<T, P> {
      * @throws SQLException SQL exception
      */
     void delete(P primaryKey) throws SQLException;
+
+    void deleteAll() throws SQLException;
     
     /**
      * Select all data.

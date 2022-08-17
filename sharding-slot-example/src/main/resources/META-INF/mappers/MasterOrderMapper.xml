@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.rlynic.sharding.slot.example.repositories.sharding.OrderRepository">
+<mapper namespace="com.rlynic.sharding.slot.example.repositories.master.MasterOrderRepository">
     <resultMap id="baseResultMap" type="com.rlynic.sharding.slot.example.entities.Order">
         <result column="order_id" property="orderId" jdbcType="BIGINT"/>
         <result column="user_id" property="userId" jdbcType="INTEGER"/>
@@ -12,19 +12,20 @@
     <update id="createTableIfNotExists">
         CREATE TABLE IF NOT EXISTS t_order (order_id BIGINT AUTO_INCREMENT, user_id INT NOT NULL, address_id BIGINT NOT NULL, status VARCHAR(50), slot INT NULL, PRIMARY KEY (order_id));
     </update>
+
     <update id="createTableIfNotExistsUndoLog">
         CREATE TABLE IF NOT EXISTS `undo_log` (
-                                                  `id` bigint NOT NULL AUTO_INCREMENT,
-                                                  `branch_id` bigint NOT NULL,
-                                                  `xid` varchar(100) NOT NULL,
-            `context` varchar(128) NOT NULL,
-            `rollback_info` longblob NOT NULL,
-            `log_status` int NOT NULL,
-            `log_created` datetime NOT NULL,
-            `log_modified` datetime NOT NULL,
-            PRIMARY KEY (`id`),
-            UNIQUE KEY `ux_undo_log` (`xid`,`branch_id`)
-            ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3;
+                                    `id` bigint NOT NULL AUTO_INCREMENT,
+                                    `branch_id` bigint NOT NULL,
+                                    `xid` varchar(100) NOT NULL,
+                                    `context` varchar(128) NOT NULL,
+                                    `rollback_info` longblob NOT NULL,
+                                    `log_status` int NOT NULL,
+                                    `log_created` datetime NOT NULL,
+                                    `log_modified` datetime NOT NULL,
+                                    PRIMARY KEY (`id`),
+                                    UNIQUE KEY `ux_undo_log` (`xid`,`branch_id`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3;
     </update>
     
     <update id="truncateTable">

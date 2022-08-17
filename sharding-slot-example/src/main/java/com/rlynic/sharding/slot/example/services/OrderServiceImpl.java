@@ -20,11 +20,13 @@ package com.rlynic.sharding.slot.example.services;
 import com.rlynic.sharding.slot.example.ExampleService;
 import com.rlynic.sharding.slot.example.entities.Order;
 import com.rlynic.sharding.slot.example.entities.OrderItem;
-import com.rlynic.sharding.slot.example.repositories.OrderItemRepository;
-import com.rlynic.sharding.slot.example.repositories.OrderRepository;
+import com.rlynic.sharding.slot.example.repositories.master.MasterOrderItemRepository;
+import com.rlynic.sharding.slot.example.repositories.master.MasterOrderRepository;
+import com.rlynic.sharding.slot.example.repositories.sharding.OrderItemRepository;
+import com.rlynic.sharding.slot.example.repositories.sharding.OrderRepository;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,9 +36,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@Primary
+//@Primary
 public class OrderServiceImpl implements ExampleService {
     private final static Logger log = LoggerFactory.getLogger(OrderServiceImpl.class);
+
+    @Resource
+    private MasterOrderRepository masterOrderRepository;
+
+    @Resource
+    private MasterOrderItemRepository masterOrderItemRepository;
 
     @Resource
     private OrderRepository orderRepository;
@@ -46,10 +54,22 @@ public class OrderServiceImpl implements ExampleService {
     
     @Override
     public void initEnvironment() throws SQLException {
-        orderRepository.dropTable();
-        orderItemRepository.dropTable();
+//        orderRepository.dropTable();
+//        orderItemRepository.dropTable();
         orderRepository.createTableIfNotExists();
+        orderRepository.createTableIfNotExistsUndoLog();
         orderItemRepository.createTableIfNotExists();
+        orderRepository.deleteAll();
+        orderItemRepository.deleteAll();
+
+        //MASTER库
+//        masterOrderRepository.dropTable();
+//        masterOrderItemRepository.dropTable();
+        masterOrderRepository.createTableIfNotExists();
+        masterOrderRepository.createTableIfNotExistsUndoLog();
+        masterOrderItemRepository.createTableIfNotExists();
+        masterOrderRepository.deleteAll();
+        masterOrderItemRepository.deleteAll();
     }
     
     @Override
@@ -64,9 +84,34 @@ public class OrderServiceImpl implements ExampleService {
         System.out.println("-------------- Process Success Begin ---------------");
         List<Long> orderIds = insertData();
         printData();
-        deleteData(orderIds);
-        printData();
+////        deleteData(orderIds);
+////        printData();
         System.out.println("-------------- Process Success Finish --------------");
+    }
+
+    @GlobalTransactional(timeoutMills = 60000, name = "test-test")
+    @Transactional
+    public void processSeataFail() throws Exception {
+        List<Long> result = new ArrayList<>(10);
+        for (int i = 1; i <= 10; i++) {
+            Order order = new Order();
+            order.setUserId(i);
+            order.setAddressId(i);
+            order.setStatus("INSERT_SEATA");
+            orderRepository.insert(order);
+            OrderItem item = new OrderItem();
+            item.setOrderId(order.getOrderId());
+            item.setUserId(i);
+            item.setStatus("INSERT_SEATA");
+            orderItemRepository.insert(item);
+            result.add(order.getOrderId());
+        }
+        Order order = new Order();
+        order.setUserId(10);
+        order.setAddressId(20);
+        order.setStatus("INSERT_SEATA_MASTER");
+        masterOrderRepository.insert(order);
+        throw new RuntimeException("seata-测试异常回滚");
     }
     
     @Override

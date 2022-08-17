@@ -15,12 +15,13 @@
  * limitations under the License.
  */
 
-package com.rlynic.sharding.slot.example.repositories;
+package com.rlynic.sharding.slot.example.repositories.master;
 
 
 import com.rlynic.sharding.slot.example.entities.OrderItem;
+import com.rlynic.sharding.slot.example.repositories.CommonRepository;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface OrderItemRepository extends CommonRepository<OrderItem, Long> {
+public interface MasterOrderItemRepository extends CommonRepository<OrderItem, Long> {
 }

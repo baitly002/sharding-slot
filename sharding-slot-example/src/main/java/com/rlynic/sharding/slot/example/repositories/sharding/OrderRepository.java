@@ -15,10 +15,11 @@
  * limitations under the License.
  */
 
-package com.rlynic.sharding.slot.example.repositories;
+package com.rlynic.sharding.slot.example.repositories.sharding;
 
 
 import com.rlynic.sharding.slot.example.entities.Order;
+import com.rlynic.sharding.slot.example.repositories.CommonRepository;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.sql.SQLException;
