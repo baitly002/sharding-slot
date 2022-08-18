@@ -5,18 +5,14 @@
  */
 package com.rlynic.sharding.slot.example;
 
-import io.seata.config.springcloud.EnableSeataSpringConfig;
-import io.seata.spring.annotation.GlobalTransactional;
 import io.seata.spring.annotation.datasource.EnableAutoDataSourceProxy;
-import io.seata.spring.boot.autoconfigure.SeataDataSourceAutoConfiguration;
+import io.seata.spring.annotation.datasource.SeataAutoDataSourceProxyCreator;
+import org.apache.shardingsphere.driver.jdbc.core.datasource.ShardingSphereDataSource;
 import org.apache.shardingsphere.driver.jdbc.core.datasource.metadata.ShardingSphereDatabaseMetaData;
-import org.apache.shardingsphere.spring.boot.ShardingSphereAutoConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.transaction.jta.JtaAutoConfiguration;
 import org.springframework.context.ConfigurableApplicationContext;
-
-import java.sql.SQLException;
 
 /**
  * <code>{@link ShardingExampleApplication}</code>
@@ -30,8 +26,8 @@ import java.sql.SQLException;
 //@SpringBootApplication(exclude = {JtaAutoConfiguration.class, ShardingSphereAutoConfiguration.class})
 //@EnableAutoDataSourceProxy(excludes = "com.rlynic.sharding.slot.example.config.sharding.MyShardingSphereDataSource")
 
-@SpringBootApplication(exclude = {JtaAutoConfiguration.class, ShardingSphereAutoConfiguration.class})
-@EnableAutoDataSourceProxy(excludes = "com.rlynic.sharding.slot.example.config.sharding.MyShardingSphereDataSource")
+@SpringBootApplication(exclude = {JtaAutoConfiguration.class/*, ShardingSphereAutoConfiguration.class*/})
+@EnableAutoDataSourceProxy(useJdkProxy = true)
 public class ShardingExampleApplication {
 
 
@@ -39,6 +35,8 @@ public class ShardingExampleApplication {
         try (ConfigurableApplicationContext applicationContext = SpringApplication.run(ShardingExampleApplication.class, args)) {
             ExampleExecuteTemplate.run(applicationContext.getBean(ExampleService.class));
         }
+//        ShardingSphereDatabaseMetaData
+//        SeataAutoDataSourceProxyCreator
     }
 
 //    @Configuration

@@ -90,16 +90,18 @@ public class OrderServiceImpl implements ExampleService {
     }
 
     @GlobalTransactional(timeoutMills = 60000, name = "test-test")
-    @Transactional
+//    @Transactional
     public void processSeataFail() throws Exception {
         List<Long> result = new ArrayList<>(10);
         for (int i = 1; i <= 10; i++) {
             Order order = new Order();
+            order.setOrderId(100+i);//设置主键  seata要求主键要传数据，要么是自增  sharding生成的主键数据拿不到
             order.setUserId(i);
             order.setAddressId(i);
             order.setStatus("INSERT_SEATA");
             orderRepository.insert(order);
             OrderItem item = new OrderItem();
+            item.setOrderItemId(200+i);
             item.setOrderId(order.getOrderId());
             item.setUserId(i);
             item.setStatus("INSERT_SEATA");
@@ -107,6 +109,7 @@ public class OrderServiceImpl implements ExampleService {
             result.add(order.getOrderId());
         }
         Order order = new Order();
+        order.setOrderId(1000);
         order.setUserId(10);
         order.setAddressId(20);
         order.setStatus("INSERT_SEATA_MASTER");

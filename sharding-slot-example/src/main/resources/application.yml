@@ -12,7 +12,8 @@ spring:
     master:
       driver-class-name: com.mysql.cj.jdbc.Driver
       type: com.zaxxer.hikari.HikariDataSource
-      jdbc-url: jdbc:mysql://10.201.62.180:3306/demo_ds_master?characterEncoding=utf-8&useSSL=false&autoReconnect=true&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true&useInformationSchema=false
+#      jdbc-url: jdbc:mysql://10.201.62.180:3306/demo_ds_master?characterEncoding=utf-8&useSSL=false&autoReconnect=true&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true&useInformationSchema=false
+      jdbc-url: jdbc:mysql://10.201.62.180:3306/demo_ds_master?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowMultiQueries=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
       username: root
       password: Bingo@123
     dynamic:
@@ -28,7 +29,7 @@ spring:
       ds-0:
         type: com.zaxxer.hikari.HikariDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://10.201.62.180:3306/demo_ds?characterEncoding=utf-8&useSSL=false&autoReconnect=true&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true&useInformationSchema=false
+        jdbc-url: jdbc:mysql://10.201.62.180:3306/demo_ds?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowMultiQueries=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
         username: root
         password: Bingo@123
         maximum-pool-size: 150
@@ -36,7 +37,7 @@ spring:
       ds-1:
         type: com.zaxxer.hikari.HikariDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://10.201.62.180:3306/demo_ds_1?characterEncoding=utf-8&useSSL=false&autoReconnect=true&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true&useInformationSchema=false
+        jdbc-url: jdbc:mysql://10.201.62.180:3306/demo_ds_1?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowMultiQueries=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
         username: root
         password: Bingo@123
         maximum-pool-size: 150
@@ -44,7 +45,7 @@ spring:
       ds-2:
         type: com.zaxxer.hikari.HikariDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://10.201.62.180:3306/demo_ds_2?characterEncoding=utf-8&useSSL=false&autoReconnect=true&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true&useInformationSchema=false
+        jdbc-url: jdbc:mysql://10.201.62.180:3306/demo_ds_2?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowMultiQueries=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
         username: root
         password: Bingo@123
         maximum-pool-size: 150
@@ -69,18 +70,18 @@ spring:
 #                shardingColumn: order_id
 #                shardingAlgorithmName: slotAlgorithm
             actual-data-nodes: ds-$->{0..2}.t_order
-            keyGenerateStrategy:
-              column: order_id
-              keyGeneratorName: snowflake
+#            keyGenerateStrategy:
+#              column: order_id
+#              keyGeneratorName: snowflake
           t_order_item:
             actual-data-nodes: ds-$->{0..2}.t_order_item
 #            tableStrategy:
 #              standard:
 #                shardingColumn: order_item_id
 #                shardingAlgorithmName: slotAlgorithm
-            keyGenerateStrategy:
-              column: order_item_id
-              keyGeneratorName: snowflake
+#            keyGenerateStrategy:
+#              column: order_item_id
+#              keyGeneratorName: snowflake
         key-generators:
           snowflake:
             type: SNOWFLAKE
@@ -117,6 +118,7 @@ seata:
   data-source-proxy-mode: AT
   transport:
     enable-client-batch-send-request: false
+#  use-jdk-proxy: true
 #seata:
 #  enabled: true
 #  application-id: sharding-test

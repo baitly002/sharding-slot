@@ -22,7 +22,7 @@ public final class ExampleExecuteTemplate {
     public static void run(final ExampleService exampleService) throws Exception {
         try {
             exampleService.initEnvironment();
-            exampleService.processSuccess();
+//            exampleService.processSuccess();
             exampleService.processSeataFail();
         } finally {
 //            exampleService.cleanEnvironment();

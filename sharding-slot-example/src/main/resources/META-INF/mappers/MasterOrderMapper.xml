@@ -10,7 +10,7 @@
     </resultMap>
 
     <update id="createTableIfNotExists">
-        CREATE TABLE IF NOT EXISTS t_order (order_id BIGINT AUTO_INCREMENT, user_id INT NOT NULL, address_id BIGINT NOT NULL, status VARCHAR(50), slot INT NULL, PRIMARY KEY (order_id));
+        CREATE TABLE IF NOT EXISTS t_order (order_id BIGINT, user_id INT NOT NULL, address_id BIGINT NOT NULL, status VARCHAR(50), slot INT NULL, PRIMARY KEY (order_id));
     </update>
 
     <update id="createTableIfNotExistsUndoLog">
@@ -35,17 +35,17 @@
     <update id="dropTable">
         DROP TABLE IF EXISTS t_order;
     </update>
-    
+
     <insert id="insert" useGeneratedKeys="true" keyProperty="orderId">
-        INSERT INTO t_order (user_id, address_id, status) VALUES (#{userId,jdbcType=INTEGER}, #{addressId,jdbcType=BIGINT}, #{status,jdbcType=VARCHAR});
+        INSERT INTO t_order (order_id, user_id, address_id, status) VALUES (#{orderId,jdbcType=BIGINT}, #{userId,jdbcType=INTEGER}, #{addressId,jdbcType=BIGINT}, #{status,jdbcType=VARCHAR});
     </insert>
 
     <insert id="batchInsert" useGeneratedKeys="true" keyProperty="orderId">
-        INSERT INTO t_order (user_id, address_id, status)
+        INSERT INTO t_order (order_id, user_id, address_id, status)
         VALUES
         <foreach item="order" index="index" collection="list"
                  open="(" separator="),(" close=")">
-            #{order.userId,jdbcType=INTEGER}, #{order.addressId,jdbcType=BIGINT}, #{order.status,jdbcType=VARCHAR}
+            #{order.orderId,jdbcType=BIGINT}, #{order.userId,jdbcType=INTEGER}, #{order.addressId,jdbcType=BIGINT}, #{order.status,jdbcType=VARCHAR}
         </foreach>
     </insert>
     

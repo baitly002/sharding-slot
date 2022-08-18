@@ -15,12 +15,12 @@ import javax.sql.DataSource;
 public class TransactionConfiguration {
 
     @Bean
-    public PlatformTransactionManager txManager(final @Qualifier("shardingSphereDataSource") DataSource dataSource) {
+    public PlatformTransactionManager txManager(final /*@Qualifier("shardingSphereDataSource")*/ DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
 
     @Bean
-    public JdbcTemplate jdbcTemplate(final @Qualifier("shardingSphereDataSource") DataSource dataSource) {
+    public JdbcTemplate jdbcTemplate(final/* @Qualifier("shardingSphereDataSource")*/ DataSource dataSource) {
         return new JdbcTemplate(dataSource);
     }
 }
