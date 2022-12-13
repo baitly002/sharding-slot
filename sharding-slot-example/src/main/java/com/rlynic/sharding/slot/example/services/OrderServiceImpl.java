@@ -24,6 +24,7 @@ import com.rlynic.sharding.slot.example.repositories.master.MasterOrderItemRepos
 import com.rlynic.sharding.slot.example.repositories.master.MasterOrderRepository;
 import com.rlynic.sharding.slot.example.repositories.sharding.OrderItemRepository;
 import com.rlynic.sharding.slot.example.repositories.sharding.OrderRepository;
+import io.seata.core.context.RootContext;
 import io.seata.spring.annotation.GlobalTransactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,13 +96,13 @@ public class OrderServiceImpl implements ExampleService {
         List<Long> result = new ArrayList<>(10);
         for (int i = 1; i <= 10; i++) {
             Order order = new Order();
-            order.setOrderId(100+i);//设置主键  seata要求主键要传数据，要么是自增  sharding生成的主键数据拿不到
+//            order.setOrderId(100+i);//设置主键  seata要求主键要传数据，要么是自增  sharding生成的主键数据拿不到
             order.setUserId(i);
             order.setAddressId(i);
             order.setStatus("INSERT_SEATA");
             orderRepository.insert(order);
             OrderItem item = new OrderItem();
-            item.setOrderItemId(200+i);
+//            item.setOrderItemId(200+i);
             item.setOrderId(order.getOrderId());
             item.setUserId(i);
             item.setStatus("INSERT_SEATA");
@@ -109,7 +110,7 @@ public class OrderServiceImpl implements ExampleService {
             result.add(order.getOrderId());
         }
         Order order = new Order();
-        order.setOrderId(1000);
+//        order.setOrderId(1000);
         order.setUserId(10);
         order.setAddressId(20);
         order.setStatus("INSERT_SEATA_MASTER");

@@ -10,13 +10,13 @@
     </resultMap>
 
     <update id="createTableIfNotExists">
-        CREATE TABLE IF NOT EXISTS t_order (order_id BIGINT, user_id INT NOT NULL, address_id BIGINT NOT NULL, status VARCHAR(50), slot INT NULL, PRIMARY KEY (order_id));
+        CREATE TABLE IF NOT EXISTS t_order (order_id BIGINT AUTO_INCREMENT, user_id INT NOT NULL, address_id BIGINT NOT NULL, status VARCHAR(50), slot INT NULL, PRIMARY KEY (order_id));
     </update>
     <update id="createTableIfNotExistsUndoLog">
         CREATE TABLE IF NOT EXISTS `undo_log` (
-                                                  `id` bigint NOT NULL AUTO_INCREMENT,
-                                                  `branch_id` bigint NOT NULL,
-                                                  `xid` varchar(100) NOT NULL,
+            `id` bigint NOT NULL AUTO_INCREMENT,
+            `branch_id` bigint NOT NULL,
+            `xid` varchar(100) NOT NULL,
             `context` varchar(128) NOT NULL,
             `rollback_info` longblob NOT NULL,
             `log_status` int NOT NULL,
@@ -36,15 +36,15 @@
     </update>
     
     <insert id="insert" useGeneratedKeys="true" keyProperty="orderId">
-        INSERT INTO t_order (order_id, user_id, address_id, status) VALUES (#{orderId,jdbcType=BIGINT}, #{userId,jdbcType=INTEGER}, #{addressId,jdbcType=BIGINT}, #{status,jdbcType=VARCHAR});
+        INSERT INTO t_order (user_id, address_id, status) VALUES (#{userId,jdbcType=INTEGER}, #{addressId,jdbcType=BIGINT}, #{status,jdbcType=VARCHAR});
     </insert>
 
     <insert id="batchInsert" useGeneratedKeys="true" keyProperty="orderId">
-        INSERT INTO t_order (order_id, user_id, address_id, status)
+        INSERT INTO t_order (user_id, address_id, status)
         VALUES
         <foreach item="order" index="index" collection="list"
                  open="(" separator="),(" close=")">
-            #{order.orderId,jdbcType=BIGINT}, #{order.userId,jdbcType=INTEGER}, #{order.addressId,jdbcType=BIGINT}, #{order.status,jdbcType=VARCHAR}
+            #{order.userId,jdbcType=INTEGER}, #{order.addressId,jdbcType=BIGINT}, #{order.status,jdbcType=VARCHAR}
         </foreach>
     </insert>
     

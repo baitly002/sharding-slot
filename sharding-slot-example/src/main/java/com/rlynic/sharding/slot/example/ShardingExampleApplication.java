@@ -6,9 +6,6 @@
 package com.rlynic.sharding.slot.example;
 
 import io.seata.spring.annotation.datasource.EnableAutoDataSourceProxy;
-import io.seata.spring.annotation.datasource.SeataAutoDataSourceProxyCreator;
-import org.apache.shardingsphere.driver.jdbc.core.datasource.ShardingSphereDataSource;
-import org.apache.shardingsphere.driver.jdbc.core.datasource.metadata.ShardingSphereDatabaseMetaData;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.transaction.jta.JtaAutoConfiguration;
@@ -35,6 +32,7 @@ public class ShardingExampleApplication {
         try (ConfigurableApplicationContext applicationContext = SpringApplication.run(ShardingExampleApplication.class, args)) {
             ExampleExecuteTemplate.run(applicationContext.getBean(ExampleService.class));
         }
+//        GeneratedKeysResultSet
 //        ShardingSphereDatabaseMetaData
 //        SeataAutoDataSourceProxyCreator
     }
