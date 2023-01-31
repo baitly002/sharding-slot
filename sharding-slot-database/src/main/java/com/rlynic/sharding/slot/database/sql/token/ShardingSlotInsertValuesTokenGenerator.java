@@ -42,7 +42,8 @@ public final class ShardingSlotInsertValuesTokenGenerator extends AbstractBaseSl
             int parameterCount = each.getParameterCount();
             if(insertStatementContext.getGeneratedKeyContext().isPresent()){
                 DerivedSimpleExpressionSegment expressionSegment = isToAddDerivedLiteralExpression(parameters, count)
-                        ? new DerivedLiteralExpressionSegment(each.getValue(count))
+//                        ? new DerivedLiteralExpressionSegment(each.getValue(count))
+                        ? new DerivedLiteralExpressionSegment(each.getLiteralValue(count))
                         : new DerivedParameterMarkerExpressionSegment(parameterCount);
                 insertValueToken.getValues().add(expressionSegment);
                 parameterCount+=1;
@@ -50,7 +51,8 @@ public final class ShardingSlotInsertValuesTokenGenerator extends AbstractBaseSl
             //----end-------
 
             DerivedSimpleExpressionSegment expressionSegment = isToAddDerivedLiteralExpression(parameters, count)
-                    ? new DerivedLiteralExpressionSegment(each.getValue(count))
+//                    ? new DerivedLiteralExpressionSegment(each.getValue(count))
+                    ? new DerivedLiteralExpressionSegment(each.getLiteralValue(count))
                     : new DerivedParameterMarkerExpressionSegment(parameterCount);
             insertValueToken.getValues().add(expressionSegment);
             count++;

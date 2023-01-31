@@ -22,9 +22,9 @@ public class SlotSQLRewriteContextDecorator implements SQLRewriteContextDecorato
 
     @Override
     public void decorate(ShardingRule shardingRule, ConfigurationProperties configurationProperties, SQLRewriteContext sqlRewriteContext, RouteContext routeContext) {
-        if (routeContext.isFederated()) {
-            return;
-        }
+//        if (routeContext.isFederated()) {
+//            return;
+//        }
         if (!sqlRewriteContext.getParameters().isEmpty()) {
             //注入主键值
             //----start-------兼容GeneratedKey注入
