@@ -1,8 +1,8 @@
 package com.rlynic.sharding.slot.database.sql.rewrite;
 
 import com.rlynic.sharding.slot.database.configuration.SlotShardingProperties;
+import com.rlynic.sharding.slot.database.sql.rewrite.parameter.ShardingInParameterRewriterBuilder;
 import com.rlynic.sharding.slot.database.sql.rewrite.parameter.ShardingSlotParameterRewriterBuilder;
-import org.apache.shardingsphere.infra.binder.statement.dml.InsertStatementContext;
 import org.apache.shardingsphere.infra.config.props.ConfigurationProperties;
 import org.apache.shardingsphere.infra.rewrite.context.SQLRewriteContext;
 import org.apache.shardingsphere.infra.rewrite.context.SQLRewriteContextDecorator;
@@ -25,6 +25,7 @@ public class SlotSQLRewriteContextDecorator implements SQLRewriteContextDecorato
 //        if (routeContext.isFederated()) {
 //            return;
 //        }
+
         if (!sqlRewriteContext.getParameters().isEmpty()) {
             //注入主键值
             //----start-------兼容GeneratedKey注入
@@ -38,9 +39,21 @@ public class SlotSQLRewriteContextDecorator implements SQLRewriteContextDecorato
                     routeContext, sqlRewriteContext.getSchemas(), sqlRewriteContext.getSqlStatementContext()).getParameterRewriters();
             rewriteParameters(sqlRewriteContext, parameterRewriters);
 
+//            SQLStatementContext sqlStatementContext = sqlRewriteContext.getSqlStatementContext();
+//            if(sqlStatementContext instanceof SelectStatementContext){
+//                Collection<WhereSegment> whereSegmentList = ((SelectStatementContext) sqlStatementContext).getWhereSegments();
+//                for(WhereSegment whereSegment : whereSegmentList){
+//
+//                }
+////                ((SelectStatementContext) sqlStatementContext).isContainsDollarParameterMarker();
+//            }
 
+            //in查询语句
+            Collection<ParameterRewriter> inParameterRewriters = new ShardingInParameterRewriterBuilder(shardingRule,
+                    routeContext, sqlRewriteContext.getSchemas(), sqlRewriteContext.getSqlStatementContext()).getParameterRewriters();
+            rewriteParameters(sqlRewriteContext, inParameterRewriters);
         }
-        sqlRewriteContext.addSQLTokenGenerators(new SlotTokenGenerateBuilder(shardingRule, routeContext, sqlRewriteContext.getSqlStatementContext()).getSQLTokenGenerators());
+        sqlRewriteContext.addSQLTokenGenerators(new SlotTokenGenerateBuilder(shardingRule, routeContext, sqlRewriteContext).getSQLTokenGenerators());
 
 //        if(sqlRewriteContext.getSqlStatementContext() instanceof InsertStatementContext){
 //            if(((InsertStatementContext) sqlRewriteContext.getSqlStatementContext()).getGeneratedKeyContext().isPresent()){

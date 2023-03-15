@@ -7,6 +7,7 @@
 	</parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>sharding-slot-database</artifactId>
+    <version>1.5.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -55,6 +56,14 @@
                 </exclusion>
             </exclusions>
 		</dependency>
+        <dependency>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy-agent</artifactId>
+        </dependency>
 	</dependencies>
 
 </project>

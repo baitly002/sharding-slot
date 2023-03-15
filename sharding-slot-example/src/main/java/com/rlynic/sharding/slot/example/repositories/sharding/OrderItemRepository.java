@@ -21,7 +21,14 @@ package com.rlynic.sharding.slot.example.repositories.sharding;
 import com.rlynic.sharding.slot.example.entities.OrderItem;
 import com.rlynic.sharding.slot.example.repositories.CommonRepository;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 @Mapper
 public interface OrderItemRepository extends CommonRepository<OrderItem, Long> {
+
+    public List<OrderItem> selectIn();
+
+    public List<OrderItem> selectInIds(@Param("ids") List<Long> ids);
 }

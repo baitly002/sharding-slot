@@ -27,6 +27,8 @@ public interface ExampleService {
      * @throws SQLException SQL exception
      */
     void initEnvironment() throws SQLException, InterruptedException;
+
+    public void selectIn() throws SQLException;
     
     /**
      * Clean environment.

@@ -5,6 +5,7 @@
  */
 package com.rlynic.sharding.slot.database.configuration;
 
+import com.rlynic.sharding.slot.database.strategy.RouteSQLRewriteEngineAgent;
 import com.rlynic.sharding.slot.database.strategy.SlotDatabaseMatcher;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -28,6 +29,7 @@ public class ShardingAutoConfiguration implements ApplicationContextAware {
 
     @Bean
     public SlotDatabaseMatcher slotDatabaseMatcher(SlotShardingProperties slotShardingProperties){
+        RouteSQLRewriteEngineAgent.getInstance().init();
         return new SlotDatabaseMatcher(slotShardingProperties);
     }
 

@@ -1,7 +1,10 @@
 package com.rlynic.sharding.slot.database.sql.rewrite;
 
+import com.rlynic.sharding.slot.database.context.SelectInStatementContext;
 import com.rlynic.sharding.slot.database.sql.token.*;
 import org.apache.shardingsphere.infra.binder.statement.SQLStatementContext;
+import org.apache.shardingsphere.infra.binder.statement.dml.SelectStatementContext;
+import org.apache.shardingsphere.infra.rewrite.context.SQLRewriteContext;
 import org.apache.shardingsphere.infra.rewrite.sql.token.generator.SQLTokenGenerator;
 import org.apache.shardingsphere.infra.rewrite.sql.token.generator.aware.RouteContextAware;
 import org.apache.shardingsphere.infra.rewrite.sql.token.generator.builder.SQLTokenGeneratorBuilder;
@@ -26,10 +29,13 @@ public final class SlotTokenGenerateBuilder implements SQLTokenGeneratorBuilder 
 
     private final SQLStatementContext<?> sqlStatementContext;
 
-    public SlotTokenGenerateBuilder(ShardingRule shardingRule, RouteContext routeContext, SQLStatementContext<?> sqlStatementContext) {
+    private final SQLRewriteContext sqlRewriteContext;
+
+    public SlotTokenGenerateBuilder(ShardingRule shardingRule, RouteContext routeContext, SQLRewriteContext sqlRewriteContext) {
         this.shardingRule = shardingRule;
         this.routeContext = routeContext;
-        this.sqlStatementContext = sqlStatementContext;
+        this.sqlStatementContext = sqlRewriteContext.getSqlStatementContext();
+        this.sqlRewriteContext = sqlRewriteContext;
     }
 
 
@@ -59,6 +65,8 @@ public final class SlotTokenGenerateBuilder implements SQLTokenGeneratorBuilder 
         addSQLTokenGenerator(result, new ShardingSlotInsertValuesTokenGenerator());
 
         addSQLTokenGenerator(result, new ShardingRemoveTokenGenerator());
+
+        addSQLTokenGenerator(result, new ShardingRemoveInTokenGenerator(shardingRule, routeContext, sqlRewriteContext));
         addSQLTokenGenerator(result, new CursorTokenGenerator());
         return result;
     }

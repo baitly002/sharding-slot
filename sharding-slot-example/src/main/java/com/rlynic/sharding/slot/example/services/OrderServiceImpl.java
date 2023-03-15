@@ -34,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -72,6 +73,18 @@ public class OrderServiceImpl implements ExampleService {
         masterOrderRepository.deleteAll();
         masterOrderItemRepository.deleteAll();
     }
+
+    @Override
+    public void selectIn() throws SQLException {
+//        List<OrderItem> items = orderItemRepository.selectIn();
+        List<Long> ids = Arrays.asList(840637597557456896L, 840637598182408192L, 840637599944015872L);
+
+        List<OrderItem> itemList = orderItemRepository.selectInIds(ids);
+        System.out.println(itemList.size());
+
+
+    }
+
     
     @Override
     public void cleanEnvironment() throws SQLException {
@@ -90,7 +103,7 @@ public class OrderServiceImpl implements ExampleService {
         System.out.println("-------------- Process Success Finish --------------");
     }
 
-    @GlobalTransactional(timeoutMills = 60000, name = "test-test")
+//    @GlobalTransactional(timeoutMills = 60000, name = "test-test")
 //    @Transactional
     public void processSeataFail() throws Exception {
         List<Long> result = new ArrayList<>(10);

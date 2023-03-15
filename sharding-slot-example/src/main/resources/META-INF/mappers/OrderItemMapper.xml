@@ -36,6 +36,24 @@
     <select id="selectAll" resultMap="baseResultMap">
         SELECT i.* FROM t_order o, t_order_item i WHERE o.order_id = i.order_id;
     </select>
+
+    <select id="selectInIds" resultMap="baseResultMap">
+        SELECT * FROM t_order_item WHERE order_id in
+        <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+<!--    <select id="selectInIds" resultMap="baseResultMap">-->
+<!--        SELECT i.* FROM t_order o, t_order_item i WHERE o.order_id = i.order_id and i.order_item_id in-->
+<!--        <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">-->
+<!--            #{id}-->
+<!--        </foreach>-->
+<!--    </select>-->
+
+    <select id="selectIn" resultMap="baseResultMap">
+        SELECT i.* FROM t_order o, t_order_item i WHERE o.order_id = i.order_id and i.order_item_id in (840637598874468353);
+    </select>
     
     <select id="selectRange" resultMap="baseResultMap">
         SELECT i.* FROM t_order o, t_order_item i WHERE o.order_id = i.order_id AND o.user_id BETWEEN 1 AND 5
