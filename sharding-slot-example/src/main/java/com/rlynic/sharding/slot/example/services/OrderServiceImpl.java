@@ -78,9 +78,17 @@ public class OrderServiceImpl implements ExampleService {
     public void selectIn() throws SQLException {
 //        List<OrderItem> items = orderItemRepository.selectIn();
         List<Long> ids = Arrays.asList(840637597557456896L, 840637598182408192L, 840637599944015872L);
+//
+//        List<OrderItem> itemList = orderItemRepository.selectInIds(ids);
+//
+//        List<OrderItem> itemAliasList = orderItemRepository.selectInIdsAlias(ids);
+//
+//        List<Long> iids = Arrays.asList(840637595078623233L, 840637605203673089L);
+//        List<OrderItem> itemManyInList = orderItemRepository.selectManyInIds(ids, iids);
 
-        List<OrderItem> itemList = orderItemRepository.selectInIds(ids);
-        System.out.println(itemList.size());
+        List<Long> oids = Arrays.asList(840637599944015872L, 840637608592670720L, 840637918484627456L, 840637088687718400L, 840637091057500160L);
+        List<OrderItem> itemManyTableInList = orderItemRepository.selectManyTableInIds(ids, oids);
+        System.out.println(itemManyTableInList.size());
 
 
     }

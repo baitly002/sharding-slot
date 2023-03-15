@@ -44,6 +44,36 @@
         </foreach>
     </select>
 
+    <select id="selectInIdsAlias" resultMap="baseResultMap">
+        SELECT * FROM t_order_item i WHERE i.order_id in
+        <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+    <select id="selectManyInIds" resultMap="baseResultMap">
+        SELECT * FROM t_order_item i WHERE i.order_id in
+        <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        and
+        i.order_item_id in
+        <foreach item="iid" index="index" collection="iids" open="(" separator="," close=")">
+            #{iid}
+        </foreach>
+    </select>
+    <select id="selectManyTableInIds" resultMap="baseResultMap">
+        SELECT * FROM t_order_item i, t_order o WHERE i.order_id in
+        <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        and
+        o.order_id in
+        <foreach item="oid" index="index" collection="oids" open="(" separator="," close=")">
+            #{oid}
+        </foreach>
+    </select>
+
+
 <!--    <select id="selectInIds" resultMap="baseResultMap">-->
 <!--        SELECT i.* FROM t_order o, t_order_item i WHERE o.order_id = i.order_id and i.order_item_id in-->
 <!--        <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">-->

@@ -2,6 +2,7 @@ package com.rlynic.sharding.slot.database.strategy;
 
 
 import com.rlynic.sharding.slot.database.RemoveParameterMarkerHolder;
+import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.implementation.bind.annotation.*;
 import org.apache.shardingsphere.infra.rewrite.context.SQLRewriteContext;
 import org.apache.shardingsphere.infra.rewrite.engine.result.SQLRewriteUnit;
@@ -14,6 +15,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.Callable;
 
+@Slf4j
 public class RewriteEngineInterceptor {
 
     /**
@@ -35,32 +37,33 @@ public class RewriteEngineInterceptor {
                                    @Super Object delegate,
                                    // 方法的调用者对象 对原始方法的调用依靠它
                                    @SuperCall Callable<?> callable) throws Exception {
-
-        final Map<RouteUnit, SQLRewriteUnit> sqlRewriteUnits = (Map)argumengts[0];
-        final SQLRewriteContext sqlRewriteContext = (SQLRewriteContext)argumengts[1];
-        final RouteContext routeContext = (RouteContext)argumengts[2];
-        final Collection<RouteUnit> routeUnits = (Collection<RouteUnit>)argumengts[3];
         Map<String, List<ParameterMarkerExpressionSegment>> removeParameterMarkerMap = RemoveParameterMarkerHolder.get();
-        for(RouteUnit each : routeUnits){
-            String sql = new RouteSQLBuilder(sqlRewriteContext, each).toSQL();
-            StringBuilder result = new StringBuilder(sql);
-            List<ParameterMarkerExpressionSegment> pms = removeParameterMarkerMap.get(each.getDataSourceMapper().getLogicName());
+        if(removeParameterMarkerMap == null){
+            callable.call();
+        }else {
+            final Map<RouteUnit, SQLRewriteUnit> sqlRewriteUnits = (Map) argumengts[0];
+            final SQLRewriteContext sqlRewriteContext = (SQLRewriteContext) argumengts[1];
+            final RouteContext routeContext = (RouteContext) argumengts[2];
+            final Collection<RouteUnit> routeUnits = (Collection<RouteUnit>) argumengts[3];
 
-            int removeIndex = 0;
-            ArrayList<Object> parameters;
-            ArrayList<Object> sqlParameters = (ArrayList<Object>) sqlRewriteContext.getParameters();
-            parameters = (ArrayList)sqlParameters.clone();
-            Collections.reverse(pms);
-            for(ParameterMarkerExpressionSegment pm : pms){
-                result.replace(pm.getStartIndex(), pm.getStopIndex()+1, createSpaceString(pm.getStopIndex()-pm.getStartIndex()+1));
-                processQuotation(result, pm.getStopIndex());
-                parameters.remove(pm.getParameterMarkerIndex()-removeIndex);
-                removeIndex++;
+            for (RouteUnit each : routeUnits) {
+                String sql = new RouteSQLBuilder(sqlRewriteContext, each).toSQL();
+                StringBuilder result = new StringBuilder(sql);
+                List<ParameterMarkerExpressionSegment> pms = removeParameterMarkerMap.get(each.getDataSourceMapper().getLogicName());
+
+                int removeIndex = 0;
+                ArrayList<Object> parameters;
+                ArrayList<Object> sqlParameters = (ArrayList<Object>) sqlRewriteContext.getParameters();
+                parameters = (ArrayList) sqlParameters.clone();
+                Collections.reverse(pms);
+                for (ParameterMarkerExpressionSegment pm : pms) {
+                    result.replace(pm.getStartIndex(), pm.getStopIndex() + 1, createSpaceString(pm.getStopIndex() - pm.getStartIndex() + 1));
+                    processQuotation(result, pm.getStopIndex());
+                    parameters.remove(pm.getParameterMarkerIndex() - removeIndex);
+                    removeIndex++;
+                }
+                sqlRewriteUnits.put(each, new SQLRewriteUnit(result.toString(), parameters));
             }
-            System.out.println(result.toString());
-            sqlRewriteUnits.put(each, new SQLRewriteUnit(result.toString(), parameters));
-//            sqlRewriteUnits.put(each, new SQLRewriteUnit(new RouteSQLBuilder(sqlRewriteContext, each).toSQL(),
-//                    getParameters(sqlRewriteContext.getParameterBuilder(), routeContext, each)));
         }
     }
 
@@ -70,6 +73,7 @@ public class RewriteEngineInterceptor {
         int bracketsIndex = builder.indexOf(")", fromIndex);//？后的第一个)
         if(quotationIndex != -1 && quotationIndex < bracketsIndex){
             builder.replace(quotationIndex, quotationIndex+1, " ");
+            return;
         }
         quotationIndex = builder.lastIndexOf(",", fromIndex);//？前的第一个,
         bracketsIndex = builder.lastIndexOf("(", fromIndex);//？前的第一个(
