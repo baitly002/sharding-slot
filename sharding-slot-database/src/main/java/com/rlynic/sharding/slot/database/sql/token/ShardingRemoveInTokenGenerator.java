@@ -115,6 +115,10 @@ public class ShardingRemoveInTokenGenerator implements CollectionSQLTokenGenerat
 
     public boolean matchShardingStrategy(SelectStatementContext selectStatementContext, InExpression inExpression){
         //TODO IN查询字段匹配规则后续再优化
+        if(inExpression.isNot()){
+            //not in 查询不进行重写
+            return false;
+        }
         Map<String, String> tableMapping = new HashMap<>();
         Collection<SimpleTableSegment> tableSegments =  selectStatementContext.getAllTables();
         tableSegments.forEach(table -> {

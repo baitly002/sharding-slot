@@ -61,6 +61,17 @@
             #{iid}
         </foreach>
     </select>
+    <select id="selectManyNotInIds" resultMap="baseResultMap">
+        SELECT * FROM t_order_item i WHERE i.order_id not in
+        <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        and
+        i.order_item_id in
+        <foreach item="iid" index="index" collection="iids" open="(" separator="," close=")">
+            #{iid}
+        </foreach>
+    </select>
     <select id="selectManyTableInIds" resultMap="baseResultMap">
         SELECT * FROM t_order_item i, t_order o WHERE i.order_id in
         <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
