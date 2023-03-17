@@ -7,6 +7,7 @@ import com.rlynic.sharding.slot.database.configuration.SlotShardingProperties;
 import com.rlynic.sharding.slot.database.context.selectin.engine.SelectInContextEngine;
 import com.rlynic.sharding.slot.database.strategy.HashSlotRouteException;
 import com.rlynic.sharding.slot.database.strategy.SlotDatabaseMatcher;
+import org.apache.commons.lang.StringUtils;
 import org.apache.shardingsphere.infra.binder.statement.SQLStatementContext;
 import org.apache.shardingsphere.infra.binder.statement.dml.SelectStatementContext;
 import org.apache.shardingsphere.infra.rewrite.context.SQLRewriteContext;
@@ -20,6 +21,7 @@ import org.apache.shardingsphere.sharding.rule.ShardingRule;
 import org.apache.shardingsphere.sql.parser.sql.common.segment.dml.column.ColumnSegment;
 import org.apache.shardingsphere.sql.parser.sql.common.segment.dml.expr.ExpressionSegment;
 import org.apache.shardingsphere.sql.parser.sql.common.segment.dml.expr.InExpression;
+import org.apache.shardingsphere.sql.parser.sql.common.segment.dml.expr.simple.LiteralExpressionSegment;
 import org.apache.shardingsphere.sql.parser.sql.common.segment.dml.expr.simple.ParameterMarkerExpressionSegment;
 import org.apache.shardingsphere.sql.parser.sql.common.segment.generic.OwnerSegment;
 import org.apache.shardingsphere.sql.parser.sql.common.segment.generic.table.SimpleTableSegment;
@@ -89,14 +91,21 @@ public class ShardingRemoveInTokenGenerator implements CollectionSQLTokenGenerat
         //removeInTokens 无需有值，因为这是给外层统一rewrite的，而非针对sharding后具体库的sql语句rewrite
         Collection<RemoveInToken> removeInTokens = new ArrayList<>();
         inExpression.getExpressionList().forEach(item -> {
+            String routedb = "";
             if(item instanceof ParameterMarkerExpressionSegment){
                 int mi = ((ParameterMarkerExpressionSegment) item).getParameterMarkerIndex();
-                String routedb = match(parameters.get(mi));
+                routedb = match(parameters.get(mi));
+            }
+            if(item instanceof LiteralExpressionSegment){
+                routedb = match(((LiteralExpressionSegment) item).getLiterals());
+            }
+            final String routedbName = routedb;
+            if(StringUtils.isNotBlank(routedbName)){
                 routeContext.getRouteUnits().forEach(route -> {
                     String dbName = route.getDataSourceMapper().getLogicName();
-                    if(!routedb.equalsIgnoreCase(dbName)){
-                        List<ParameterMarkerExpressionSegment> p = new ArrayList<>();
-                        p.add((ParameterMarkerExpressionSegment) item);
+                    if(!routedbName.equalsIgnoreCase(dbName)){
+                        List<ExpressionSegment> p = new ArrayList<>();
+                        p.add(item);
                         RemoveParameterMarkerHolder.add(dbName, p);
                     }
                 });
@@ -108,7 +117,7 @@ public class ShardingRemoveInTokenGenerator implements CollectionSQLTokenGenerat
     public boolean matchSingleSelectIn(InExpression inExpression){
         Collection<ExpressionSegment> items = inExpression.getExpressionList();
         for(ExpressionSegment item : items){
-            return item instanceof ParameterMarkerExpressionSegment;
+            return item instanceof ParameterMarkerExpressionSegment || item instanceof LiteralExpressionSegment;
         }
         return false;
     }

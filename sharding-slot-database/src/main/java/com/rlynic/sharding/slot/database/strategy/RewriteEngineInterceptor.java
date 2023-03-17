@@ -9,6 +9,8 @@ import org.apache.shardingsphere.infra.rewrite.engine.result.SQLRewriteUnit;
 import org.apache.shardingsphere.infra.rewrite.sql.impl.RouteSQLBuilder;
 import org.apache.shardingsphere.infra.route.context.RouteContext;
 import org.apache.shardingsphere.infra.route.context.RouteUnit;
+import org.apache.shardingsphere.sql.parser.sql.common.segment.dml.expr.ExpressionSegment;
+import org.apache.shardingsphere.sql.parser.sql.common.segment.dml.expr.simple.LiteralExpressionSegment;
 import org.apache.shardingsphere.sql.parser.sql.common.segment.dml.expr.simple.ParameterMarkerExpressionSegment;
 
 import java.lang.reflect.Method;
@@ -37,7 +39,7 @@ public class RewriteEngineInterceptor {
                                    @Super Object delegate,
                                    // 方法的调用者对象 对原始方法的调用依靠它
                                    @SuperCall Callable<?> callable) throws Exception {
-        Map<String, List<ParameterMarkerExpressionSegment>> removeParameterMarkerMap = RemoveParameterMarkerHolder.get();
+        Map<String, List<ExpressionSegment>> removeParameterMarkerMap = RemoveParameterMarkerHolder.get();
         if(removeParameterMarkerMap == null){
             callable.call();
         }else {
@@ -49,18 +51,24 @@ public class RewriteEngineInterceptor {
             for (RouteUnit each : routeUnits) {
                 String sql = new RouteSQLBuilder(sqlRewriteContext, each).toSQL();
                 StringBuilder result = new StringBuilder(sql);
-                List<ParameterMarkerExpressionSegment> pms = removeParameterMarkerMap.get(each.getDataSourceMapper().getLogicName());
+                List<ExpressionSegment> pms = removeParameterMarkerMap.get(each.getDataSourceMapper().getLogicName());
 
                 int removeIndex = 0;
                 ArrayList<Object> parameters;
                 ArrayList<Object> sqlParameters = (ArrayList<Object>) sqlRewriteContext.getParameters();
                 parameters = (ArrayList) sqlParameters.clone();
                 Collections.reverse(pms);
-                for (ParameterMarkerExpressionSegment pm : pms) {
-                    result.replace(pm.getStartIndex(), pm.getStopIndex() + 1, createSpaceString(pm.getStopIndex() - pm.getStartIndex() + 1));
-                    processQuotation(result, pm.getStopIndex());
-                    parameters.remove(pm.getParameterMarkerIndex() - removeIndex);
-                    removeIndex++;
+                for (ExpressionSegment pm : pms) {
+                    if(pm instanceof ParameterMarkerExpressionSegment) {
+                        result.replace(pm.getStartIndex(), pm.getStopIndex() + 1, createSpaceString(pm.getStopIndex() - pm.getStartIndex() + 1));
+                        processQuotation(result, pm.getStopIndex());
+                        parameters.remove(((ParameterMarkerExpressionSegment) pm).getParameterMarkerIndex() - removeIndex);
+                        removeIndex++;
+                    }
+                    if(pm instanceof LiteralExpressionSegment){
+                        result.replace(pm.getStartIndex(), pm.getStopIndex() + 1, createSpaceString(pm.getStopIndex() - pm.getStartIndex() + 1));
+                        processQuotation(result, pm.getStopIndex());
+                    }
                 }
                 sqlRewriteUnits.put(each, new SQLRewriteUnit(result.toString(), parameters));
             }

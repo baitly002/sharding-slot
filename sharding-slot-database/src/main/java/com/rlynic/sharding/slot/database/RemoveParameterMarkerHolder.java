@@ -1,34 +1,34 @@
 package com.rlynic.sharding.slot.database;
 
-import com.google.common.collect.Lists;
-import org.apache.shardingsphere.sql.parser.sql.common.segment.dml.expr.simple.ParameterMarkerExpressionSegment;
+import org.apache.shardingsphere.sql.parser.sql.common.segment.dml.expr.ExpressionSegment;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RemoveParameterMarkerHolder {
 
-    private static ThreadLocal<Map<String, List<ParameterMarkerExpressionSegment>>> parameterMarkerMap = new ThreadLocal<>();
+    private static ThreadLocal<Map<String, List<ExpressionSegment>>> expressionSegmentMap = new ThreadLocal<>();
 
-    public static void add(String db, List<ParameterMarkerExpressionSegment> parameterMarker){
-        Map<String, List<ParameterMarkerExpressionSegment>> removeParameterMarker = parameterMarkerMap.get();
-        if(null == removeParameterMarker){
-            removeParameterMarker = new HashMap<>();
-            parameterMarkerMap.set(removeParameterMarker);
+    public static void add(String db, List<ExpressionSegment> expressionSegment){
+        Map<String, List<ExpressionSegment>> removeExpressionSegment = expressionSegmentMap.get();
+        if(null == removeExpressionSegment){
+            removeExpressionSegment = new HashMap<>();
+            expressionSegmentMap.set(removeExpressionSegment);
         }
-        List<ParameterMarkerExpressionSegment> parameterMarkerList = removeParameterMarker.get(db);
-        if(parameterMarkerList != null){
-//            parameterMarkerList.addAll(parameterMarker);
-            parameterMarker.addAll(parameterMarkerList);
+        List<ExpressionSegment> expressionSegmentList = removeExpressionSegment.get(db);
+        if(expressionSegmentList != null){
+            expressionSegment.addAll(expressionSegmentList);
         }
-        removeParameterMarker.put(db, parameterMarker);
+        removeExpressionSegment.put(db, expressionSegment);
     }
 
-    public static Map<String, List<ParameterMarkerExpressionSegment>> get(){
-        return parameterMarkerMap.get();
+    public static Map<String, List<ExpressionSegment>> get(){
+        return expressionSegmentMap.get();
     }
 
     public static void clear(){
-        parameterMarkerMap.remove();
+        expressionSegmentMap.remove();
     }
 
 }

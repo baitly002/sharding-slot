@@ -93,7 +93,7 @@
 <!--    </select>-->
 
     <select id="selectIn" resultMap="baseResultMap">
-        SELECT i.* FROM t_order o, t_order_item i WHERE o.order_id = i.order_id and i.order_item_id in (840637598874468353);
+        SELECT i.* FROM t_order o, t_order_item i WHERE o.order_id = i.order_id and i.order_id in (840637597557456896, 840637598182408192, 840637599944015872);
     </select>
     
     <select id="selectRange" resultMap="baseResultMap">
