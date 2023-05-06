@@ -70,7 +70,7 @@ public class RewriteEngineInterceptor {
                         processQuotation(result, pm.getStopIndex());
                     }
                 }
-                sqlRewriteUnits.put(each, new SQLRewriteUnit(result.toString(), parameters));
+                sqlRewriteUnits.put(each, new SQLRewriteUnit(formatString(result.toString()), parameters));
             }
         }
     }
@@ -96,5 +96,9 @@ public class RewriteEngineInterceptor {
             sb.append(" ");
         }
         return sb.toString();
+    }
+
+    public static String formatString(String str){
+        return str.replaceAll(" {2,}", " ").replaceAll("(\n ){2,}", "\n ");
     }
 }
