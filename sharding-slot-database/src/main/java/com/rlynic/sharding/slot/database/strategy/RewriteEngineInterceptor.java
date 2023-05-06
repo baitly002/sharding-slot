@@ -99,6 +99,7 @@ public class RewriteEngineInterceptor {
     }
 
     public static String formatString(String str){
-        return str.replaceAll(" {2,}", " ").replaceAll("(\n ){2,}", "\n ");
+//        return str.replaceAll(" {2,}", " ").replaceAll("(\n ){2,}", "\n ");
+        return str.replaceAll("\n", " ").replaceAll(" {2,}", " ").trim();
     }
 }
