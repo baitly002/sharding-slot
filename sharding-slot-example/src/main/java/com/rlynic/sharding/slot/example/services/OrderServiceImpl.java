@@ -77,9 +77,11 @@ public class OrderServiceImpl implements ExampleService {
     @Override
     public void selectIn() throws SQLException {
         List<OrderItem> items = orderItemRepository.selectIn();
+        List<OrderItem> items2 = orderItemRepository.selectInStatic();
         List<Long> ids = Arrays.asList(840637597557456896L, 840637598182408192L, 840637599944015872L);
 
         List<OrderItem> itemList = orderItemRepository.selectInIds(ids);
+        List<OrderItem> itemList2 = orderItemRepository.selectInIdsStatic(ids);
 
         List<OrderItem> itemAliasList = orderItemRepository.selectInIdsAlias(ids);
 

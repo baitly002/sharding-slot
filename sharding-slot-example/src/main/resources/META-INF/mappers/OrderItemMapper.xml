@@ -43,6 +43,12 @@
             #{id}
         </foreach>
     </select>
+    <select id="selectInIdsStatic" resultMap="baseResultMap">
+        SELECT * FROM t_order_item WHERE order_id in
+        <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
+            (#{id})
+        </foreach>
+    </select>
 
     <select id="selectInIdsAlias" resultMap="baseResultMap">
         SELECT * FROM t_order_item i WHERE i.order_id in
@@ -94,6 +100,10 @@
 
     <select id="selectIn" resultMap="baseResultMap">
         SELECT i.* FROM t_order o, t_order_item i WHERE o.order_id = i.order_id and i.order_id in (840637597557456896, 840637598182408192, 840637599944015872);
+    </select>
+
+    <select id="selectInStatic" resultMap="baseResultMap">
+        SELECT i.* FROM t_order o, t_order_item i WHERE o.order_id = i.order_id and i.order_id in ((840637597557456896), (840637598182408192), (840637599944015872));
     </select>
     
     <select id="selectRange" resultMap="baseResultMap">

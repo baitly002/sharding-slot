@@ -30,7 +30,11 @@ public interface OrderItemRepository extends CommonRepository<OrderItem, Long> {
 
     public List<OrderItem> selectIn();
 
+    public List<OrderItem> selectInStatic();
+
     public List<OrderItem> selectInIds(@Param("ids") List<Long> ids);
+
+    public List<OrderItem> selectInIdsStatic(@Param("ids") List<Long> ids);
 
     public List<OrderItem> selectInIdsAlias(@Param("ids") List<Long> ids);
 
