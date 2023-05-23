@@ -1,7 +1,7 @@
 package com.rlynic.sharding.slot.database.sql.rewrite.parameter;
 
 import org.apache.shardingsphere.infra.binder.statement.SQLStatementContext;
-import org.apache.shardingsphere.infra.metadata.database.schema.decorator.model.ShardingSphereSchema;
+import org.apache.shardingsphere.infra.metadata.database.schema.model.ShardingSphereSchema;
 import org.apache.shardingsphere.infra.rewrite.parameter.rewriter.ParameterRewriter;
 import org.apache.shardingsphere.infra.rewrite.parameter.rewriter.ParameterRewriterBuilder;
 import org.apache.shardingsphere.infra.rewrite.sql.token.generator.aware.RouteContextAware;

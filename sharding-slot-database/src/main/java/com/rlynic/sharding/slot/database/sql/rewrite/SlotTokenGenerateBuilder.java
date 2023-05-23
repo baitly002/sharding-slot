@@ -1,9 +1,10 @@
 package com.rlynic.sharding.slot.database.sql.rewrite;
 
-import com.rlynic.sharding.slot.database.context.SelectInStatementContext;
-import com.rlynic.sharding.slot.database.sql.token.*;
+import com.rlynic.sharding.slot.database.sql.token.ShardingRemoveInTokenGenerator;
+import com.rlynic.sharding.slot.database.sql.token.ShardingSlotInsertColumnTokenGenerator;
+import com.rlynic.sharding.slot.database.sql.token.ShardingSlotInsertValuesTokenGenerator;
+import com.rlynic.sharding.slot.database.sql.token.TransformSlotInsertValuesTokenGenerator;
 import org.apache.shardingsphere.infra.binder.statement.SQLStatementContext;
-import org.apache.shardingsphere.infra.binder.statement.dml.SelectStatementContext;
 import org.apache.shardingsphere.infra.rewrite.context.SQLRewriteContext;
 import org.apache.shardingsphere.infra.rewrite.sql.token.generator.SQLTokenGenerator;
 import org.apache.shardingsphere.infra.rewrite.sql.token.generator.aware.RouteContextAware;
@@ -14,7 +15,6 @@ import org.apache.shardingsphere.sharding.rewrite.token.generator.impl.*;
 import org.apache.shardingsphere.sharding.rewrite.token.generator.impl.keygen.GeneratedKeyAssignmentTokenGenerator;
 import org.apache.shardingsphere.sharding.rewrite.token.generator.impl.keygen.GeneratedKeyForUseDefaultInsertColumnsTokenGenerator;
 import org.apache.shardingsphere.sharding.rewrite.token.generator.impl.keygen.GeneratedKeyInsertColumnTokenGenerator;
-import org.apache.shardingsphere.sharding.rewrite.token.generator.impl.keygen.GeneratedKeyInsertValuesTokenGenerator;
 import org.apache.shardingsphere.sharding.rule.ShardingRule;
 import org.apache.shardingsphere.sharding.rule.aware.ShardingRuleAware;
 

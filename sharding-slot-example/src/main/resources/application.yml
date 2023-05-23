@@ -7,6 +7,8 @@ spring:
   #  profiles:
   #    active: sharding-databases
   datasource:
+#    driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
+#    url: jdbc:shardingsphere:classpath:sharding.yaml
     hikari:
       minimum-idle: 10
       maximum-pool-size: 150
@@ -17,86 +19,7 @@ spring:
       jdbc-url: jdbc:mysql://10.200.20.94:30093/demo_ds_master?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowMultiQueries=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
       username: root
       password: Link$2013
-  #    dynamic:
-  #      seata: true
-  shardingsphere:
-    #    enabled: true
-    #    mode:
-    #      type: Memory
-    #    mode:
-    #      type: Standalone
-    #      overwrite: false
-    #      repository:
-    #        type: File
-    #        props:
-    #          path: .shardingsphere
-    props:
-      sql-show: true
-    datasource:
-      names: ds-0,ds-1,ds-2
-      ds-0:
-        type: com.zaxxer.hikari.HikariDataSource
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://10.200.20.94:30093/demo_ds?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowMultiQueries=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
-        username: root
-        password: Link$2013
-        maximum-pool-size: 15
-        minimum-idle: 1
-      ds-1:
-        type: com.zaxxer.hikari.HikariDataSource
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://10.200.20.94:30093/demo_ds_1?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowMultiQueries=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
-        username: root
-        password: Link$2013
-        maximum-pool-size: 15
-        minimum-idle: 1
-      ds-2:
-        type: com.zaxxer.hikari.HikariDataSource
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://10.200.20.94:30093/demo_ds_2?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowMultiQueries=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
-        username: root
-        password: Link$2013
-        maximum-pool-size: 15
-        minimum-idle: 1
-    rules:
-      sharding:
-#        default-database-strategy:
-#          hint:
-#            sharding-algorithm-name: hintAlgorithm
-        sharding-algorithms:
-          slotAlgorithm:
-            props:
-              strategy: standard
-              algorithmClassName: com.rlynic.sharding.slot.database.strategy.HashSlotShardingAlgorithm
-            type: CLASS_BASED
-#          hintAlgorithm:
-#            props:
-#              strategy: hint
-#              algorithmClassName: com.example.demo.example.config.MyHintShardingAlgorithm
-#            type: CLASS_BASED
-        binding-tables: t_order,t_order_item
-        tables:
-          t_order:
-            actual-data-nodes: ds-$->{0..2}.t_order
-            database-strategy:
-              standard:
-                sharding-algorithm-name: slotAlgorithm
-                sharding-column: order_id
-            keyGenerateStrategy:
-              column: order_id
-              keyGeneratorName: snowflake
-          t_order_item:
-            actual-data-nodes: ds-$->{0..2}.t_order_item
-            database-strategy:
-              standard:
-                sharding-algorithm-name: slotAlgorithm
-                sharding-column: order_id
-            keyGenerateStrategy:
-              column: order_item_id
-              keyGeneratorName: snowflake
-        key-generators:
-          snowflake:
-            type: SNOWFLAKE
+
 
 
 mybatis:

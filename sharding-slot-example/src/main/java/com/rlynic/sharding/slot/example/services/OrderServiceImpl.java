@@ -24,14 +24,12 @@ import com.rlynic.sharding.slot.example.repositories.master.MasterOrderItemRepos
 import com.rlynic.sharding.slot.example.repositories.master.MasterOrderRepository;
 import com.rlynic.sharding.slot.example.repositories.sharding.OrderItemRepository;
 import com.rlynic.sharding.slot.example.repositories.sharding.OrderRepository;
-import io.seata.core.context.RootContext;
-import io.seata.spring.annotation.GlobalTransactional;
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;

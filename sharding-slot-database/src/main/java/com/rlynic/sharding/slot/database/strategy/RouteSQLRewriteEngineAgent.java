@@ -22,7 +22,7 @@ public class RouteSQLRewriteEngineAgent {
                     .type(ElementMatchers.named("org.apache.shardingsphere.infra.rewrite.engine.RouteSQLRewriteEngine"))
 //                    .transform((builder, type, classLoader, module) ->
 //                            builder.method(ElementMatchers.named("addSQLRewriteUnits")).intercept(MethodDelegation.to(RewriteEngineInterceptor.class)))
-                    .transform((builder, type, classLoader, module) ->
+                    .transform((builder, type, classLoader, module, protectionDomain) ->
                             builder.method(ElementMatchers.named("translate")).intercept(MethodDelegation.to(RewriteMethodInterceptor.class)))
                     .with(new AgentBuilder.Listener(){
                         @Override

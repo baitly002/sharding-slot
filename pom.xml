@@ -3,20 +3,20 @@
     <parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.6.4</version>
+		<version>3.0.0</version>
 	</parent>
     <modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.rlynic</groupId>
     <artifactId>sharding-slot</artifactId>
-    <version>1.5.2-SNAPSHOT</version>
+    <version>1.5.3-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
-        <mybatis-spring.version>2.2.2</mybatis-spring.version>
-        <shardingsphere.version>5.2.1</shardingsphere.version>
+        <java.version>17</java.version>
+        <mybatis-spring.version>3.0.1</mybatis-spring.version>
+        <shardingsphere.version>5.3.2</shardingsphere.version>
 		<compiler-plugin.version>3.7.0</compiler-plugin.version>
 		<source-plugin.version>3.2.1</source-plugin.version>
     </properties>
@@ -46,9 +46,14 @@
                 <artifactId>sharding-slot-database</artifactId>
                 <version>${project.version}</version>
             </dependency>
+<!--            <dependency>-->
+<!--                <groupId>org.apache.shardingsphere</groupId>-->
+<!--                <artifactId>shardingsphere-jdbc-core-spring-boot-starter</artifactId>-->
+<!--                <version>${shardingsphere.version}</version>-->
+<!--            </dependency>-->
             <dependency>
                 <groupId>org.apache.shardingsphere</groupId>
-                <artifactId>shardingsphere-jdbc-core-spring-boot-starter</artifactId>
+                <artifactId>shardingsphere-jdbc-core</artifactId>
                 <version>${shardingsphere.version}</version>
             </dependency>
             <dependency>

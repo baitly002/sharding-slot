@@ -13,7 +13,7 @@ public class HashSlotShardingAlgorithm implements StandardShardingAlgorithm<Stri
     public HashSlotShardingAlgorithm(){};
 
     @Override
-    public String doSharding(Collection availableTargetNames, PreciseShardingValue shardingValue) {
+    public String doSharding(Collection<String> availableTargetNames, PreciseShardingValue<String> shardingValue) {
         if(null == matcher){
             matcher = ShardingAutoConfiguration.context.getBean(SlotDatabaseMatcher.class);
         }
@@ -31,7 +31,6 @@ public class HashSlotShardingAlgorithm implements StandardShardingAlgorithm<Stri
         return "HASH_SLOT";
     }
 
-    @Override
     public Properties getProps() {
         return null;
     }

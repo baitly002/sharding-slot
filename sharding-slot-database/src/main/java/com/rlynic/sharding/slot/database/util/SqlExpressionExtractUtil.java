@@ -1,7 +1,7 @@
 package com.rlynic.sharding.slot.database.util;
 
 import com.rlynic.sharding.slot.database.segment.ParameterMarkerExpressionSegmentExt;
-import org.apache.shardingsphere.sql.parser.sql.common.constant.LogicalOperator;
+import org.apache.shardingsphere.sql.parser.sql.common.enums.LogicalOperator;
 import org.apache.shardingsphere.sql.parser.sql.common.segment.dml.expr.BinaryOperationExpression;
 import org.apache.shardingsphere.sql.parser.sql.common.segment.dml.expr.ExpressionSegment;
 import org.apache.shardingsphere.sql.parser.sql.common.segment.dml.expr.FunctionSegment;

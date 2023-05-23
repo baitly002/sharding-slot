@@ -31,7 +31,7 @@ public class MasterMapperConfiguration {
 
     @Bean(name="localDataSource")
     @Primary
-    public DataSource localDataSource(HikariConfig configuration){
+    public DataSource localDataSource(@Qualifier("hikariConfig") HikariConfig configuration){
         DataSource dataSource = new HikariDataSource(configuration);
 //        SeataDataSourceProxy proxy = buildProxy(dataSource, "AT");
 //        DataSourceProxyHolder.put(dataSource, proxy);

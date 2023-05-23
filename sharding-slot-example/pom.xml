@@ -3,7 +3,7 @@
     <parent>
 		<groupId>com.rlynic</groupId>
         <artifactId>sharding-slot</artifactId>
-        <version>1.5.2-SNAPSHOT</version>
+        <version>1.5.3-SNAPSHOT</version>
 	</parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>sharding-slot-example</artifactId>
@@ -21,7 +21,7 @@
         <dependency>
             <groupId>com.rlynic</groupId>
             <artifactId>sharding-slot-database</artifactId>
-            <version>1.5.2-SNAPSHOT</version>
+            <version>1.5.3-SNAPSHOT</version>
         </dependency>
 
         <!-- sharding 5.2.1 需要用到-->
@@ -77,7 +77,7 @@
         <dependency>
             <groupId>io.seata</groupId>
             <artifactId>seata-spring-boot-starter</artifactId>
-            <version>1.5.1</version>
+            <version>1.7.0-native-rc2</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.antlr</groupId>
@@ -85,10 +85,21 @@
                 </exclusion>
             </exclusions>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>io.seata</groupId>-->
+<!--            <artifactId>seata-spring-boot-starter</artifactId>-->
+<!--            <version>1.5.1</version>-->
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <groupId>org.antlr</groupId>-->
+<!--                    <artifactId>antlr4</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.antlr</groupId>
-            <artifactId>antlr4</artifactId>
-            <version>4.9.2</version>
+            <artifactId>antlr4-runtime</artifactId>
+            <version>4.10.1</version>
         </dependency>
 
         <dependency>
