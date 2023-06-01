@@ -50,6 +50,34 @@
         </foreach>
     </select>
 
+    <select id="selectInIdsStaticForBracket" resultMap="baseResultMap">
+        SELECT * FROM t_order_item WHERE (order_id) in
+        <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
+            (#{id})
+        </foreach>
+        for update;
+    </select>
+
+    <select id="selectInIdsStaticForUpdate" resultMap="baseResultMap">
+        SELECT * FROM t_order_item WHERE order_id in
+        <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
+            (#{id})
+        </foreach>
+        for update;
+    </select>
+
+    <insert id="replaceIntoSingle">
+        replace into t_order_item (order_item_id, order_id, user_id, status) values
+        (#{orderItemId}, #{orderId}, #{userId}, #{status})
+    </insert>
+
+    <insert id="replaceIntoList">
+        replace into t_order_item (order_item_id, order_id, user_id, status) values
+        <foreach item="i" index="index" collection="items" open="" separator="," close="">
+            (#{i.orderItemId}, #{i.orderId}, #{i.userId}, #{i.status})
+        </foreach>
+    </insert>
+
     <select id="selectInIdsAlias" resultMap="baseResultMap">
         SELECT * FROM t_order_item i WHERE i.order_id in
         <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">

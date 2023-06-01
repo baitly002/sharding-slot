@@ -36,6 +36,14 @@ public interface OrderItemRepository extends CommonRepository<OrderItem, Long> {
 
     public List<OrderItem> selectInIdsStatic(@Param("ids") List<Long> ids);
 
+    public List<OrderItem> selectInIdsStaticForBracket(@Param("ids") List<Long> ids);
+
+    public List<OrderItem> selectInIdsStaticForUpdate(@Param("ids") List<Long> ids);
+
+    public int replaceIntoSingle(OrderItem item);
+
+    public int replaceIntoList(@Param("items")List<OrderItem> items);
+
     public List<OrderItem> selectInIdsAlias(@Param("ids") List<Long> ids);
 
     public List<OrderItem> selectManyInIds(@Param("ids") List<Long> ids, @Param("iids") List<Long> iids);

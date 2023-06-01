@@ -74,12 +74,34 @@ public class OrderServiceImpl implements ExampleService {
 
     @Override
     public void selectIn() throws SQLException {
-        List<OrderItem> items = orderItemRepository.selectIn();
-        List<OrderItem> items2 = orderItemRepository.selectInStatic();
+        List<OrderItem> itemss = new ArrayList<>();
+        OrderItem i1 = new OrderItem();
+        i1.setOrderItemId(10000000000000L);
+        i1.setOrderId(2000000000L);
+        i1.setUserId(300000);
+        i1.setStatus("0");
+        itemss.add(i1);
+        OrderItem i2 = new OrderItem();
+        i2.setOrderItemId(110000000000000L);
+        i2.setOrderId(22000000000L);
+        i2.setUserId(3300000);
+        i2.setStatus("2");
+        itemss.add(i2);
+//        orderItemRepository.replaceIntoList(itemss);//list暂不支持
+
+//        orderItemRepository.replaceIntoSingle(i1);
+
+//        List<OrderItem> items = orderItemRepository.selectIn();
+//        List<OrderItem> items2 = orderItemRepository.selectInStatic();
         List<Long> ids = Arrays.asList(840637597557456896L, 840637598182408192L, 840637599944015872L);
 
-        List<OrderItem> itemList = orderItemRepository.selectInIds(ids);
-        List<OrderItem> itemList2 = orderItemRepository.selectInIdsStatic(ids);
+//        List<OrderItem> itemList = orderItemRepository.selectInIds(ids);
+//        List<OrderItem> itemList2 = orderItemRepository.selectInIdsStatic(ids);
+        List<OrderItem> itemList4bracket = orderItemRepository.selectInIdsStaticForBracket(ids);
+
+        List<OrderItem> itemList4update = orderItemRepository.selectInIdsStaticForUpdate(ids);
+
+
 
         List<OrderItem> itemAliasList = orderItemRepository.selectInIdsAlias(ids);
 
