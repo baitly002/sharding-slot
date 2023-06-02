@@ -38,6 +38,9 @@ public interface OrderItemRepository extends CommonRepository<OrderItem, Long> {
 
     public List<OrderItem> selectInIdsAlias(@Param("ids") List<Long> ids);
 
+    public int updateInIds(@Param("ids") List<Long> ids);
+    public int deleteInIds(@Param("ids") List<Long> ids);
+
     public List<OrderItem> selectManyInIds(@Param("ids") List<Long> ids, @Param("iids") List<Long> iids);
 
     public List<OrderItem> selectManyNotInIds(@Param("ids") List<Long> ids, @Param("iids") List<Long> iids);

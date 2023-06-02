@@ -76,6 +76,27 @@ public class OrderServiceImpl implements ExampleService {
 
     @Override
     public void selectIn() throws SQLException {
+        OrderItem t1 = new OrderItem();
+        t1.setOrderId(840637593400901632L);
+        t1.setUserId(2);
+        t1.setStatus("insertInIds");
+        OrderItem t2 = new OrderItem();
+        t2.setOrderId(840640867369746432L);
+        t2.setUserId(2);
+        t2.setStatus("insertInIds");
+        OrderItem t3 = new OrderItem();
+        t3.setOrderId(840637008681369600L);
+        t3.setUserId(2);
+        t3.setStatus("insertInIds");
+        orderItemRepository.insert(t1);
+        orderItemRepository.insert(t2);
+        orderItemRepository.insert(t3);
+        List<Long> insertIds = new ArrayList<>();
+        insertIds.add(t1.getOrderId());
+        insertIds.add(t2.getOrderId());
+        insertIds.add(t3.getOrderId());
+        int uret = orderItemRepository.updateInIds(insertIds);
+        int dret = orderItemRepository.deleteInIds(insertIds);
         List<OrderItem> items = orderItemRepository.selectIn();
         List<OrderItem> items2 = orderItemRepository.selectInStatic();
         List<Long> ids = Arrays.asList(840637597557456896L, 840637598182408192L, 840637599944015872L);

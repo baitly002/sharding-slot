@@ -56,6 +56,22 @@
             #{id}
         </foreach>
     </select>
+
+    <update id="updateInIds">
+        UPDATE t_order_item f     SET f.status = 'updateInIds' WHERE f.user_id = 2         and f.order_id in
+        <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="deleteInIds">
+        DELETE f FROM  t_order_item f WHERE f.user_id = 2         and f.order_id in
+        <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+
     <select id="selectManyInIds" resultMap="baseResultMap">
         SELECT * FROM t_order_item i WHERE i.order_id in
         <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
