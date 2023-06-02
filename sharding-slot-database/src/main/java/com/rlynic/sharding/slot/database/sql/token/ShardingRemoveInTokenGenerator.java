@@ -90,7 +90,7 @@ public class ShardingRemoveInTokenGenerator implements CollectionSQLTokenGenerat
 //                            //TODO 常量
 //                        }
 //                    }
-                    boolean matchShardingStrategy = matchShardingStrategy((SelectStatementContext) sqlStatementContext, inExpression);
+                    boolean matchShardingStrategy = matchShardingStrategy(sqlStatementContext, inExpression);
                     boolean matchSingleSelectIn = matchSingleSelectIn(inExpression);
                     if(matchShardingStrategy && matchSingleSelectIn) {
                         result.addAll(shardingIn(inExpression, sqlRewriteContext.getParameters()));
@@ -136,14 +136,24 @@ public class ShardingRemoveInTokenGenerator implements CollectionSQLTokenGenerat
         return false;
     }
 
-    public boolean matchShardingStrategy(SelectStatementContext selectStatementContext, InExpression inExpression){
+    public boolean matchShardingStrategy(final SQLStatementContext<?> sqlStatementContext, InExpression inExpression){
         //TODO IN查询字段匹配规则后续再优化
         if(inExpression.isNot()){
             //not in 查询不进行重写
             return false;
         }
         Map<String, String> tableMapping = new HashMap<>();
-        Collection<SimpleTableSegment> tableSegments =  selectStatementContext.getAllTables();
+        Collection<SimpleTableSegment> tableSegments = null;
+        if(sqlStatementContext instanceof UpdateStatementContext){
+            tableSegments = ((UpdateStatementContext) sqlStatementContext).getAllTables();
+        }
+        if(sqlStatementContext instanceof DeleteStatementContext){
+            tableSegments = ((DeleteStatementContext) sqlStatementContext).getAllTables();
+        }
+        if(sqlStatementContext instanceof SelectStatementContext){
+            tableSegments = ((SelectStatementContext) sqlStatementContext).getAllTables();
+        }
+
         tableSegments.forEach(table -> {
             table.getAlias().ifPresent(alias -> {
                 tableMapping.put(alias, table.getTableName().getIdentifier().getValue());

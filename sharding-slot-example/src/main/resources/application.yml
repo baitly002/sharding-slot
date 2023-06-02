@@ -7,8 +7,8 @@ spring:
   #  profiles:
   #    active: sharding-databases
   datasource:
-#    driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
-#    url: jdbc:shardingsphere:classpath:sharding.yaml
+    driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
+    url: jdbc:shardingsphere:classpath:sharding.yaml
     hikari:
       minimum-idle: 10
       maximum-pool-size: 150

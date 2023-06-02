@@ -27,7 +27,7 @@ public class SlotSQLRewriteContextDecorator implements SQLRewriteContextDecorato
 //        }
 
         if (!sqlRewriteContext.getParameters().isEmpty()) {
-            //注入主键值
+            //注入主键值 仅仅注入值，与字段名、占位符无关
             //----start-------兼容GeneratedKey注入
             Collection<ParameterRewriter> parameterRewritersKey = new ShardingParameterRewriterBuilder(shardingRule,
                     routeContext, sqlRewriteContext.getSchemas(), sqlRewriteContext.getSqlStatementContext()).getParameterRewriters();
