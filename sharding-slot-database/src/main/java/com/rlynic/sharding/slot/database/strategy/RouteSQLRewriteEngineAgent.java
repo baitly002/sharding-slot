@@ -19,6 +19,7 @@ public class RouteSQLRewriteEngineAgent {
         synchronized (RouteSQLRewriteEngineAgent.class){
             ByteBuddyAgent.install();
             new AgentBuilder.Default()
+                                               //org.apache.shardingsphere.infra.rewrite.engine
                     .type(ElementMatchers.named("org.apache.shardingsphere.infra.rewrite.engine.RouteSQLRewriteEngine"))
 //                    .transform((builder, type, classLoader, module) ->
 //                            builder.method(ElementMatchers.named("addSQLRewriteUnits")).intercept(MethodDelegation.to(RewriteEngineInterceptor.class)))

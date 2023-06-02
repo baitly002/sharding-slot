@@ -9,7 +9,9 @@ import com.rlynic.sharding.slot.database.strategy.HashSlotRouteException;
 import com.rlynic.sharding.slot.database.strategy.SlotDatabaseMatcher;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shardingsphere.infra.binder.statement.SQLStatementContext;
+import org.apache.shardingsphere.infra.binder.statement.dml.DeleteStatementContext;
 import org.apache.shardingsphere.infra.binder.statement.dml.SelectStatementContext;
+import org.apache.shardingsphere.infra.binder.statement.dml.UpdateStatementContext;
 import org.apache.shardingsphere.infra.rewrite.context.SQLRewriteContext;
 import org.apache.shardingsphere.infra.rewrite.sql.token.generator.CollectionSQLTokenGenerator;
 import org.apache.shardingsphere.infra.rewrite.sql.token.pojo.SQLToken;
@@ -23,6 +25,7 @@ import org.apache.shardingsphere.sql.parser.sql.common.segment.dml.expr.Expressi
 import org.apache.shardingsphere.sql.parser.sql.common.segment.dml.expr.InExpression;
 import org.apache.shardingsphere.sql.parser.sql.common.segment.dml.expr.simple.LiteralExpressionSegment;
 import org.apache.shardingsphere.sql.parser.sql.common.segment.dml.expr.simple.ParameterMarkerExpressionSegment;
+import org.apache.shardingsphere.sql.parser.sql.common.segment.dml.predicate.WhereSegment;
 import org.apache.shardingsphere.sql.parser.sql.common.segment.generic.OwnerSegment;
 import org.apache.shardingsphere.sql.parser.sql.common.segment.generic.table.SimpleTableSegment;
 
@@ -60,15 +63,26 @@ public class ShardingRemoveInTokenGenerator implements CollectionSQLTokenGenerat
     }
 
     private boolean isContainsAggregationDistinctProjection(final SQLStatementContext<?> sqlStatementContext) {
-        return sqlStatementContext instanceof SelectStatementContext && !routeContext.isSingleRouting();
+        return (sqlStatementContext instanceof SelectStatementContext || sqlStatementContext instanceof UpdateStatementContext ||
+                sqlStatementContext instanceof DeleteStatementContext) && !routeContext.isSingleRouting();
     }
 
     @Override
     public Collection<? extends SQLToken> generateSQLTokens(final SQLStatementContext<?> sqlStatementContext) {
         Collection<SQLToken> result = new LinkedList<>();
         if (isContainsAggregationDistinctProjection(sqlStatementContext)) {
+            Collection<WhereSegment> whereSegments = null;
+            if(sqlStatementContext instanceof UpdateStatementContext){
+                whereSegments = ((UpdateStatementContext) sqlStatementContext).getWhereSegments();
+            }
+            if(sqlStatementContext instanceof DeleteStatementContext){
+                whereSegments = ((DeleteStatementContext) sqlStatementContext).getWhereSegments();
+            }
             if(sqlStatementContext instanceof SelectStatementContext){
-                Collection<InExpression> inExpressions = new SelectInContextEngine().getInExpressions(((SelectStatementContext) sqlStatementContext).getWhereSegments());
+                whereSegments = ((SelectStatementContext) sqlStatementContext).getWhereSegments();
+            }
+            if(whereSegments != null && whereSegments.size() > 0){
+                Collection<InExpression> inExpressions = new SelectInContextEngine().getInExpressions(whereSegments);
                 for(InExpression inExpression : inExpressions){
 //                    Collection<ExpressionSegment> segments = inExpression.getExpressionList();
 //                    for(ExpressionSegment segment : segments){

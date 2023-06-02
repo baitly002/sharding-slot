@@ -20,11 +20,14 @@ public class RewriteMethodInterceptor {
     /**
      * 进行方法拦截, 注意这里可以对所有修饰符的修饰的方法（包含private的方法）进行拦截
      *
-     * @param callable 原方法执行
+     * SQLTranslatorRule translatorRule
+     * DatabaseType protocolType;
+     * Map<String, DatabaseType> storageTypes;
+     * param callable 原方法执行
      * @return 执行结果
      */
     @RuntimeType
-    public static Object intercept(
+    public static Map<RouteUnit, SQLRewriteUnit> translate(
             // 被拦截的目标对象 （动态生成的目标对象）
 //            @This Object target,
             // 只想读取一个值
@@ -42,7 +45,8 @@ public class RewriteMethodInterceptor {
             // 目标对象的一个代理
 //            @Super Object delegate,
             // 方法的调用者对象 对原始方法的调用依靠它
-            @SuperCall Callable<?> callable) throws Exception {
+            @SuperCall Callable<Map<RouteUnit, SQLRewriteUnit>> callable
+    ) throws Exception {
 
         Map<String, List<ExpressionSegment>> removeParameterMarkerMap = RemoveParameterMarkerHolder.get();
         if (removeParameterMarkerMap == null) {
