@@ -11,6 +11,7 @@ import org.apache.shardingsphere.infra.rewrite.sql.token.generator.aware.Previou
 import org.apache.shardingsphere.infra.rewrite.sql.token.pojo.SQLToken;
 import org.apache.shardingsphere.infra.rewrite.sql.token.pojo.generic.InsertValue;
 import org.apache.shardingsphere.infra.rewrite.sql.token.pojo.generic.InsertValuesToken;
+import org.apache.shardingsphere.sharding.rule.ShardingRule;
 import org.apache.shardingsphere.sql.parser.sql.common.segment.dml.column.InsertColumnsSegment;
 
 import java.util.List;
@@ -21,13 +22,18 @@ import java.util.Optional;
 public final class ShardingSlotInsertValuesTokenGenerator extends AbstractBaseSlotTokenGenerator implements PreviousSQLTokensAware {
 
     private List<SQLToken> previousSQLTokens;
+    private ShardingRule shardingRule;
+
+    public ShardingSlotInsertValuesTokenGenerator(ShardingRule shardingRule) {
+        this.shardingRule = shardingRule;
+    }
 
     @Override
     protected boolean isGenerateSQLToken(final InsertStatementContext insertStatementContext) {
         Optional<InsertColumnsSegment> sqlSegment = insertStatementContext.getSqlStatement().getInsertColumns();
         return sqlSegment.isPresent() && !insertStatementContext.getSqlStatement().getValues().isEmpty()
                 && !insertStatementContext.getColumnNames().contains(slotShardingProperties.getColumn())
-                && slotShardingProperties.getTableNames().contains(insertStatementContext.getSqlStatement().getTable().getTableName().getIdentifier().getValue());
+                && shardingRule.getAllTables().contains(insertStatementContext.getSqlStatement().getTable().getTableName().getIdentifier().getValue());
     }
 
     @Override

@@ -2,11 +2,11 @@ package com.rlynic.sharding.slot.database.sql.token;
 
 import com.rlynic.sharding.slot.database.CRC16;
 import com.rlynic.sharding.slot.database.RemoveParameterMarkerHolder;
-import com.rlynic.sharding.slot.database.configuration.ShardingAutoConfiguration;
 import com.rlynic.sharding.slot.database.configuration.SlotShardingProperties;
 import com.rlynic.sharding.slot.database.context.selectin.engine.SelectInContextEngine;
 import com.rlynic.sharding.slot.database.strategy.HashSlotRouteException;
 import com.rlynic.sharding.slot.database.strategy.SlotDatabaseMatcher;
+import com.rlynic.sharding.slot.database.util.SpringBeanUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shardingsphere.infra.binder.statement.SQLStatementContext;
 import org.apache.shardingsphere.infra.binder.statement.dml.DeleteStatementContext;
@@ -53,8 +53,8 @@ public class ShardingRemoveInTokenGenerator implements CollectionSQLTokenGenerat
         this.shardingRule = shardingRule;
         this.routeContext = routeContext;
         this.sqlRewriteContext = sqlRewriteContext;
-        this.slotShardingProperties = ShardingAutoConfiguration.context.getBean(SlotShardingProperties.class);
-        this.slotDatabaseMatcher = ShardingAutoConfiguration.context.getBean(SlotDatabaseMatcher.class);
+        this.slotShardingProperties = SpringBeanUtil.getBean(SlotShardingProperties.class);
+        this.slotDatabaseMatcher = SpringBeanUtil.getBean(SlotDatabaseMatcher.class);
     }
 
     @Override

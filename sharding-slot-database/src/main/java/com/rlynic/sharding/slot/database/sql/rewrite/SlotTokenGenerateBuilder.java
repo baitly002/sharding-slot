@@ -9,6 +9,7 @@ import org.apache.shardingsphere.infra.rewrite.sql.token.generator.builder.SQLTo
 import org.apache.shardingsphere.infra.route.context.RouteContext;
 import org.apache.shardingsphere.sharding.rewrite.token.generator.IgnoreForSingleRoute;
 import org.apache.shardingsphere.sharding.rewrite.token.generator.impl.*;
+import org.apache.shardingsphere.sharding.rewrite.token.generator.impl.keygen.GeneratedKeyAssignmentTokenGenerator;
 import org.apache.shardingsphere.sharding.rewrite.token.generator.impl.keygen.GeneratedKeyForUseDefaultInsertColumnsTokenGenerator;
 import org.apache.shardingsphere.sharding.rewrite.token.generator.impl.keygen.GeneratedKeyInsertColumnTokenGenerator;
 import org.apache.shardingsphere.sharding.rewrite.token.generator.impl.keygen.GeneratedKeyInsertValuesTokenGenerator;
@@ -51,16 +52,16 @@ public final class SlotTokenGenerateBuilder implements SQLTokenGeneratorBuilder 
         addSQLTokenGenerator(result, new GeneratedKeyInsertColumnTokenGenerator());
         addSQLTokenGenerator(result, new GeneratedKeyForUseDefaultInsertColumnsTokenGenerator());
         addSQLTokenGenerator(result, new GeneratedKeyAssignmentTokenGenerator());
-//        addSQLTokenGenerator(result, new GeneratedKeyAssignmentTokenGenerator());
 //        addSQLTokenGenerator(result, new ShardingInsertValuesTokenGenerator());
 //        addSQLTokenGenerator(result, new GeneratedKeyInsertValuesTokenGenerator());
 
 
-        addSQLTokenGenerator(result, new ShardingSlotInsertColumnTokenGenerator());
+        addSQLTokenGenerator(result, new ShardingSlotInsertColumnTokenGenerator(shardingRule));
         TransformSlotInsertValuesTokenGenerator transformSlotInsertValuesTokenGenerator = new TransformSlotInsertValuesTokenGenerator();
         transformSlotInsertValuesTokenGenerator.setRouteContext(routeContext);
+        transformSlotInsertValuesTokenGenerator.setShardingRule(shardingRule);
         addSQLTokenGenerator(result, transformSlotInsertValuesTokenGenerator);
-        addSQLTokenGenerator(result, new ShardingSlotInsertValuesTokenGenerator());
+        addSQLTokenGenerator(result, new ShardingSlotInsertValuesTokenGenerator(shardingRule));
 
         addSQLTokenGenerator(result, new ShardingRemoveTokenGenerator());
 

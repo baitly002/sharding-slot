@@ -1,8 +1,8 @@
 package com.rlynic.sharding.slot.database.sql.rewrite.parameter;
 
 import com.rlynic.sharding.slot.database.SlotContextHolder;
-import com.rlynic.sharding.slot.database.configuration.ShardingAutoConfiguration;
 import com.rlynic.sharding.slot.database.configuration.SlotShardingProperties;
+import com.rlynic.sharding.slot.database.util.SpringBeanUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.shardingsphere.infra.binder.statement.SQLStatementContext;
@@ -10,6 +10,8 @@ import org.apache.shardingsphere.infra.binder.statement.dml.InsertStatementConte
 import org.apache.shardingsphere.infra.rewrite.parameter.builder.ParameterBuilder;
 import org.apache.shardingsphere.infra.rewrite.parameter.builder.impl.GroupedParameterBuilder;
 import org.apache.shardingsphere.infra.rewrite.parameter.rewriter.ParameterRewriter;
+import org.apache.shardingsphere.infra.route.context.RouteContext;
+import org.apache.shardingsphere.sharding.rule.ShardingRule;
 import org.apache.shardingsphere.sql.parser.sql.common.statement.dml.InsertStatement;
 
 import java.util.ArrayList;
@@ -25,16 +27,26 @@ import java.util.List;
 @Slf4j
 public class ShardingSlotInsertValueParameterRewriter implements ParameterRewriter<InsertStatementContext> {
     private SlotShardingProperties slotShardingProperties;
+    private final ShardingRule shardingRule;
+    private final RouteContext routeContext;
+
+    public ShardingSlotInsertValueParameterRewriter(ShardingRule shardingRule, RouteContext routeContext) {
+        this.slotShardingProperties = slotShardingProperties;
+        this.shardingRule = shardingRule;
+        this.routeContext = routeContext;
+    }
 
     @Override
     public boolean isNeedRewrite(final SQLStatementContext sqlStatementContext) {
         if(null == slotShardingProperties){
-            slotShardingProperties = ShardingAutoConfiguration.context.getBean(SlotShardingProperties.class);
+            slotShardingProperties = SpringBeanUtil.getBean(SlotShardingProperties.class);
         }
         return sqlStatementContext instanceof InsertStatementContext
                 && !((InsertStatementContext)sqlStatementContext).getColumnNames().contains(slotShardingProperties.getColumn())
-                && slotShardingProperties.getTableNames().contains(((InsertStatement) sqlStatementContext.getSqlStatement()).getTable().getTableName().getIdentifier().getValue());
+                && shardingRule.getAllTables().contains(((InsertStatement) sqlStatementContext.getSqlStatement()).getTable().getTableName().getIdentifier().getValue());
     }
+
+
 
     @Override
     public void rewrite(ParameterBuilder parameterBuilder, InsertStatementContext insertStatementContext, List<Object> parameters) {

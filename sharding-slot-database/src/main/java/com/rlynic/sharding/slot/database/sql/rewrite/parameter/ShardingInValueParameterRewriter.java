@@ -1,8 +1,8 @@
 package com.rlynic.sharding.slot.database.sql.rewrite.parameter;
 
-import com.rlynic.sharding.slot.database.configuration.ShardingAutoConfiguration;
 import com.rlynic.sharding.slot.database.configuration.SlotShardingProperties;
 import com.rlynic.sharding.slot.database.context.selectin.engine.SelectInContextEngine;
+import com.rlynic.sharding.slot.database.util.SpringBeanUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shardingsphere.infra.binder.statement.SQLStatementContext;
 import org.apache.shardingsphere.infra.binder.statement.dml.SelectStatementContext;
@@ -27,7 +27,7 @@ public class ShardingInValueParameterRewriter implements ParameterRewriter<Selec
     @Override
     public boolean isNeedRewrite(final SQLStatementContext sqlStatementContext) {
         if(null == slotShardingProperties){
-            slotShardingProperties = ShardingAutoConfiguration.context.getBean(SlotShardingProperties.class);
+            slotShardingProperties = SpringBeanUtil.getBean(SlotShardingProperties.class);
         }
         if(sqlStatementContext instanceof SelectStatementContext){
 //            sqlStatementContext.getTablesContext().getTableNames().contains()

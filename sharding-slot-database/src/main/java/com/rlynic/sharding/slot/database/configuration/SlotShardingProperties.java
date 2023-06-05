@@ -25,8 +25,8 @@ public class SlotShardingProperties {
     private String column="slot";
     private int number=16384;
     private Range range;
-    private List<String> datasourceNames;
-    private List<String> tableNames;
+//    private List<String> datasourceNames;
+//    private List<String> tableNames;
 
     @Data
     @NoArgsConstructor

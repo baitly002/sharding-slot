@@ -1,8 +1,8 @@
 package com.rlynic.sharding.slot.database.sql.token;
 
 import com.rlynic.sharding.slot.database.SlotContextHolder;
-import com.rlynic.sharding.slot.database.configuration.ShardingAutoConfiguration;
 import com.rlynic.sharding.slot.database.configuration.SlotShardingProperties;
+import com.rlynic.sharding.slot.database.util.SpringBeanUtil;
 import org.apache.shardingsphere.infra.binder.statement.SQLStatementContext;
 import org.apache.shardingsphere.infra.binder.statement.dml.InsertStatementContext;
 import org.apache.shardingsphere.infra.rewrite.sql.token.generator.OptionalSQLTokenGenerator;
@@ -14,7 +14,7 @@ public abstract class AbstractBaseSlotTokenGenerator implements OptionalSQLToken
     @Override
     public final boolean isGenerateSQLToken(final SQLStatementContext sqlStatementContext) {
         if(null == slotShardingProperties){
-            slotShardingProperties = ShardingAutoConfiguration.context.getBean(SlotShardingProperties.class);
+            slotShardingProperties = SpringBeanUtil.getBean(SlotShardingProperties.class);
         }
         boolean isSlot = sqlStatementContext instanceof InsertStatementContext
                 && isGenerateSQLToken((InsertStatementContext)sqlStatementContext);

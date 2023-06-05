@@ -38,7 +38,7 @@ public final class ShardingSlotParameterRewriterBuilder implements ParameterRewr
     @Override
     public Collection<ParameterRewriter> getParameterRewriters() {
         Collection<ParameterRewriter> result = new LinkedList<>();
-        addParameterRewriter(result, new ShardingSlotInsertValueParameterRewriter());
+        addParameterRewriter(result, new ShardingSlotInsertValueParameterRewriter(shardingRule, routeContext));
         return result;
     }
 

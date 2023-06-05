@@ -1,6 +1,6 @@
 package com.rlynic.sharding.slot.database.strategy;
 
-import com.rlynic.sharding.slot.database.configuration.ShardingAutoConfiguration;
+import com.rlynic.sharding.slot.database.util.SpringBeanUtil;
 import org.apache.shardingsphere.sharding.api.sharding.standard.PreciseShardingValue;
 import org.apache.shardingsphere.sharding.api.sharding.standard.RangeShardingValue;
 import org.apache.shardingsphere.sharding.api.sharding.standard.StandardShardingAlgorithm;
@@ -15,7 +15,7 @@ public class HashSlotShardingAlgorithm implements StandardShardingAlgorithm<Stri
     @Override
     public String doSharding(Collection<String> availableTargetNames, PreciseShardingValue<String> shardingValue) {
         if(null == matcher){
-            matcher = ShardingAutoConfiguration.context.getBean(SlotDatabaseMatcher.class);
+            matcher = SpringBeanUtil.getBean(SlotDatabaseMatcher.class);
         }
 
         return matcher.match(shardingValue.getValue());
