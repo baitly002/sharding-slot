@@ -29,6 +29,7 @@ public class ShardingAutoConfiguration implements ApplicationContextAware {
 
     @Bean
     public SlotDatabaseMatcher slotDatabaseMatcher(SlotShardingProperties slotShardingProperties){
+//        ShardingJdbcCoreAgent.getInstance().init();
         RouteSQLRewriteEngineAgent.getInstance().init();
         return new SlotDatabaseMatcher(slotShardingProperties);
     }
