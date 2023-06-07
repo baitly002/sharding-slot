@@ -36,7 +36,7 @@ slot:
         ds-2: "{10922, 16383}"
 
 seata:
-  enabled: false
+  enabled: true
   application-id: sharding-test
   tx-service-group: springboot-seata-group
   registry:
@@ -47,7 +47,7 @@ seata:
       name: file.conf
   service:
     grouplist:
-      default: 10.200.21.76:28080
+      default: 10.200.21.167:28080
     #      default: 10.201.62.180:8091
     vgroup-mapping:
       springboot-seata-group: default
