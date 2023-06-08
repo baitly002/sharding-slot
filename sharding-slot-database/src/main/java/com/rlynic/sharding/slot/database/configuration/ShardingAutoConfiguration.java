@@ -5,13 +5,11 @@
  */
 package com.rlynic.sharding.slot.database.configuration;
 
+import com.rlynic.sharding.plugin.ShardingJdbcCoreAgent;
 import com.rlynic.sharding.slot.database.strategy.RouteSQLRewriteEngineAgent;
 import com.rlynic.sharding.slot.database.strategy.SlotDatabaseMatcher;
 import com.rlynic.sharding.slot.database.util.SpringBeanUtil;
-import org.springframework.beans.BeansException;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -30,7 +28,7 @@ public class ShardingAutoConfiguration{
 
     @Bean
     public SlotDatabaseMatcher slotDatabaseMatcher(SlotShardingProperties slotShardingProperties){
-//        ShardingJdbcCoreAgent.getInstance().init();
+        ShardingJdbcCoreAgent.getInstance().init();
         RouteSQLRewriteEngineAgent.getInstance().init();
         return new SlotDatabaseMatcher(slotShardingProperties);
     }

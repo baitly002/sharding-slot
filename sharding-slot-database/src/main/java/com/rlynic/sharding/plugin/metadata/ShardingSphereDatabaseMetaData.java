@@ -40,12 +40,7 @@ public final class ShardingSphereDatabaseMetaData extends AdaptedDatabaseMetaDat
 
     @Override
     public Connection getConnection() throws SQLException {
-        if (null == currentPhysicalConnection) {
-            // currentPhysicalConnection = connection.getConnectionManager().getRandomConnection();
-            // fix: 修复多个物理主机组成分库时，随机的库名与随机的连接不一致导致的查询异常
-            currentPhysicalConnection = connection.getConnectionManager().getConnections(getDataSourceName(), 1, ConnectionMode.MEMORY_STRICTLY).get(0);
-        }
-        return currentPhysicalConnection;
+        return getConnectionExtend();
     }
 
     @Override
@@ -100,11 +95,7 @@ public final class ShardingSphereDatabaseMetaData extends AdaptedDatabaseMetaDat
 
     @Override
     public ResultSet getColumns(final String catalog, final String schemaPattern, final String tableNamePattern, final String columnNamePattern) throws SQLException {
-        // return createDatabaseMetaDataResultSet(
-        // getDatabaseMetaData().getColumns(getActualCatalog(catalog), getActualSchema(schemaPattern), getActualTableNamePattern(tableNamePattern), columnNamePattern));
-        // fix: 去除模糊查询表元数据，比如获取t_order,却连t_order_item都获取到了
-        return createDatabaseMetaDataResultSet(
-                getDatabaseMetaData().getColumns(getActualCatalog(catalog), getActualSchema(schemaPattern), tableNamePattern, columnNamePattern));
+        return getColumnsExtend(catalog, schemaPattern, tableNamePattern, columnNamePattern);
     }
 
     @Override
@@ -234,5 +225,22 @@ public final class ShardingSphereDatabaseMetaData extends AdaptedDatabaseMetaDat
             currentDatabaseMetaData = getConnection().getMetaData();
         }
         return currentDatabaseMetaData;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    //下面所修复的源码BUG
+
+    public Connection getConnectionExtend() throws SQLException {
+        if (null == currentPhysicalConnection) {
+            // fix: 修复多个物理主机组成分库时，随机的库名与随机的连接不一致导致的查询异常
+            currentPhysicalConnection = connection.getConnectionManager().getConnections(getDataSourceName(), 1, ConnectionMode.MEMORY_STRICTLY).get(0);
+        }
+        return currentPhysicalConnection;
+    }
+
+    public ResultSet getColumnsExtend(final String catalog, final String schemaPattern, final String tableNamePattern, final String columnNamePattern) throws SQLException {
+        // fix: 去除模糊查询表元数据，比如获取t_order,却连t_order_item都获取到了
+        return createDatabaseMetaDataResultSet(
+                getDatabaseMetaData().getColumns(getActualCatalog(catalog), getActualSchema(schemaPattern), tableNamePattern, columnNamePattern));
     }
 }

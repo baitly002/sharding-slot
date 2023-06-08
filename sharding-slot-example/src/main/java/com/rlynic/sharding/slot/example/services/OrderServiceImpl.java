@@ -24,6 +24,7 @@ import com.rlynic.sharding.slot.example.repositories.master.MasterOrderItemRepos
 import com.rlynic.sharding.slot.example.repositories.master.MasterOrderRepository;
 import com.rlynic.sharding.slot.example.repositories.sharding.OrderItemRepository;
 import com.rlynic.sharding.slot.example.repositories.sharding.OrderRepository;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -158,7 +159,7 @@ public class OrderServiceImpl implements ExampleService {
         System.out.println("-------------- Process Success Finish --------------");
     }
 
-//    @GlobalTransactional(timeoutMills = 60000, name = "test-test")
+    @GlobalTransactional(timeoutMills = 60000, name = "test-test")
 //    @Transactional
     public void processSeataFail() throws Exception {
         List<Long> result = new ArrayList<>(10);
