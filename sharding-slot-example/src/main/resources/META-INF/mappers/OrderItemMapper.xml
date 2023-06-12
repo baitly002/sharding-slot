@@ -99,6 +99,13 @@
         </foreach>
     </update>
 
+    <update id="deleteOrderIds">
+        DELETE FROM  t_order_item WHERE order_id in
+        <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
 
     <select id="selectManyInIds" resultMap="baseResultMap">
         SELECT * FROM t_order_item i WHERE i.order_id in

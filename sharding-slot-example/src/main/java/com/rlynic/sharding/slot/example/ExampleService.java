@@ -50,7 +50,9 @@ public interface ExampleService {
      * @throws SQLException SQL exception
      */
     void processSeataFail() throws Exception;
-    
+
+    void deleteSharding() throws Exception;
+
     /**
      * Process failure.
      * 

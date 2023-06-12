@@ -23,6 +23,19 @@
             <artifactId>sharding-slot-database</artifactId>
             <version>1.5.3-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.shardingsphere</groupId>
+            <artifactId>shardingsphere-jdbc-core</artifactId>
+            <version>${shardingsphere.version}</version>
+        </dependency>
+
+        <!-- 使用 BASE 事务时，需要引入此模块 -->
+        <dependency>
+            <groupId>org.apache.shardingsphere</groupId>
+            <artifactId>shardingsphere-transaction-base-seata-at</artifactId>
+            <version>${shardingsphere.version}</version>
+        </dependency>
+
 
         <!-- sharding 5.2.1 需要用到-->
         <dependency>
@@ -30,6 +43,7 @@
             <artifactId>snakeyaml</artifactId>
             <version>1.33</version>
         </dependency>
+
 
         <!-- 1.5.0用 -->
 <!--        <dependency>-->
@@ -74,6 +88,13 @@
 <!--            <artifactId>link-dtx</artifactId>-->
 <!--            <version>4.7.3-beta-SNAPSHOT</version>-->
 <!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>io.seata</groupId>-->
+<!--            <artifactId>seata-spring-boot-starter</artifactId>-->
+<!--            <version>1.6.1</version>-->
+<!--        </dependency>-->
+
         <dependency>
             <groupId>io.seata</groupId>
             <artifactId>seata-spring-boot-starter</artifactId>
@@ -85,6 +106,12 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-runtime</artifactId>
+            <version>4.10.1</version>
+        </dependency>
+
 <!--        <dependency>-->
 <!--            <groupId>io.seata</groupId>-->
 <!--            <artifactId>seata-spring-boot-starter</artifactId>-->
@@ -96,11 +123,8 @@
 <!--                </exclusion>-->
 <!--            </exclusions>-->
 <!--        </dependency>-->
-        <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr4-runtime</artifactId>
-            <version>4.10.1</version>
-        </dependency>
+
+
 
         <dependency>
 			<groupId>com.zaxxer</groupId>

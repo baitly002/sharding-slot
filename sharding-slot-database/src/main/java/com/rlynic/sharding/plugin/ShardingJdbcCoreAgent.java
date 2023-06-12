@@ -1,5 +1,6 @@
 package com.rlynic.sharding.plugin;
 
+import com.rlynic.sharding.slot.database.strategy.RewriteMethodInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.agent.ByteBuddyAgent;
@@ -14,6 +15,7 @@ import net.bytebuddy.matcher.ElementMatchers;
 import net.bytebuddy.pool.TypePool;
 import net.bytebuddy.utility.JavaModule;
 import org.apache.shardingsphere.driver.jdbc.core.connection.ShardingSphereConnection;
+import org.apache.shardingsphere.infra.rewrite.engine.RouteSQLRewriteEngine;
 
 import java.lang.reflect.Modifier;
 
@@ -80,6 +82,9 @@ public class ShardingJdbcCoreAgent {
 //                    .type(ElementMatchers.is(ShardingSphereDatabaseMetaData.class))
 //                    .transform((builder, type, classLoader, module, protectionDomain) ->
 //                            builder.visit(Advice.to(AdviceGetConnection.class).on(ElementMatchers.named("getConnection"))))
+                    .type(ElementMatchers.is(RouteSQLRewriteEngine.class))
+                    .transform((builder, type, classLoader, module, protectionDomain) ->
+                            builder.method(ElementMatchers.named("translate")).intercept(MethodDelegation.to(RewriteMethodInterceptor.class)))
                     .disableClassFormatChanges() //bytebuddy详细日志
 //                    .with(AgentBuilder.Listener.StreamWriting.toSystemOut()) //bytebuddy详细日志
                     .with(RETRANSFORMATION) //bytebuddy详细日志

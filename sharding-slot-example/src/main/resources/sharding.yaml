@@ -36,10 +36,15 @@ rules:
 - !SHARDING
   shardingAlgorithms:
     slotAlgorithm:
+      type: HASH_SLOT
+#       props:
+#         strategy: standard
+#         algorithmClassName: com.rlynic.sharding.slot.database.strategy.HashSlotShardingAlgorithm
+#       type: CLASS_BASED
+    xid_inline:
+      type: INLINE
       props:
-        strategy: standard
-        algorithmClassName: com.rlynic.sharding.slot.database.strategy.HashSlotShardingAlgorithm
-      type: CLASS_BASED
+        algorithm-expression: ds-${branch_id % 3}
   tables:
     t_order:
       actualDataNodes: ds-$->{0..2}.t_order
@@ -59,8 +64,17 @@ rules:
       keyGenerateStrategy:
         column: order_item_id
         keyGeneratorName: snowflake
+    undo_log:
+      actualDataNodes: ds-$->{0..2}.undo_log
+      databaseStrategy:
+        standard:
+          shardingAlgorithmName: xid_inline
+          shardingColumn: branch_id
   keyGenerators:
     snowflake:
       type: SNOWFLAKE
+# - !TRANSACTION
+#   defaultType: BASE
+#   providerType: Seata
 props:
   sql-show: true

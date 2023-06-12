@@ -1,11 +1,13 @@
 package com.rlynic.sharding.slot.database.sql.token;
 
+import com.rlynic.sharding.slot.database.SlotContextHolder;
 import com.rlynic.sharding.slot.database.configuration.SlotShardingProperties;
 import com.rlynic.sharding.slot.database.util.SpringBeanUtil;
 import lombok.Setter;
 import org.apache.shardingsphere.infra.binder.segment.insert.values.InsertValueContext;
 import org.apache.shardingsphere.infra.binder.statement.SQLStatementContext;
 import org.apache.shardingsphere.infra.binder.statement.dml.InsertStatementContext;
+import org.apache.shardingsphere.infra.binder.statement.dml.SelectStatementContext;
 import org.apache.shardingsphere.infra.datanode.DataNode;
 import org.apache.shardingsphere.infra.rewrite.sql.token.generator.OptionalSQLTokenGenerator;
 import org.apache.shardingsphere.infra.rewrite.sql.token.generator.aware.RouteContextAware;
@@ -29,6 +31,9 @@ public final class TransformSlotInsertValuesTokenGenerator implements OptionalSQ
 
     @Override
     public boolean isGenerateSQLToken(final SQLStatementContext<?> sqlStatementContext) {
+        if(sqlStatementContext instanceof SelectStatementContext){
+            return false;
+        }
         if(null == slotShardingProperties){
             slotShardingProperties = SpringBeanUtil.getBean(SlotShardingProperties.class);
         }

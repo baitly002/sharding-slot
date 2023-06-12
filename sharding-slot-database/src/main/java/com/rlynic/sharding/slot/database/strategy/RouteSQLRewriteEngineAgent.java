@@ -1,5 +1,6 @@
 package com.rlynic.sharding.slot.database.strategy;
 
+import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.agent.ByteBuddyAgent;
 import net.bytebuddy.agent.builder.AgentBuilder;
 import net.bytebuddy.description.type.TypeDescription;
@@ -7,7 +8,8 @@ import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.implementation.MethodDelegation;
 import net.bytebuddy.matcher.ElementMatchers;
 import net.bytebuddy.utility.JavaModule;
-
+import org.apache.shardingsphere.infra.rewrite.engine.RouteSQLRewriteEngine;
+@Slf4j
 public class RouteSQLRewriteEngineAgent {
     private static RouteSQLRewriteEngineAgent instance = new RouteSQLRewriteEngineAgent();
     private RouteSQLRewriteEngineAgent(){};
@@ -19,7 +21,8 @@ public class RouteSQLRewriteEngineAgent {
         synchronized (RouteSQLRewriteEngineAgent.class){
             ByteBuddyAgent.install();
             new AgentBuilder.Default()
-                    .type(ElementMatchers.named("org.apache.shardingsphere.infra.rewrite.engine.RouteSQLRewriteEngine"))
+//                    .type(ElementMatchers.named("org.apache.shardingsphere.infra.rewrite.engine.RouteSQLRewriteEngine"))
+                    .type(ElementMatchers.is(RouteSQLRewriteEngine.class))
 //                    .transform((builder, type, classLoader, module) ->
 //                            builder.method(ElementMatchers.named("addSQLRewriteUnits")).intercept(MethodDelegation.to(RewriteEngineInterceptor.class)))
                     .transform((builder, type, classLoader, module, protectionDomain) ->
@@ -39,7 +42,7 @@ public class RouteSQLRewriteEngineAgent {
 
                         @Override
                         public void onError(String typeName, ClassLoader classLoader, JavaModule module, boolean loaded, Throwable throwable) {
-
+                            log.error("error init", throwable);
                         }
 
                         @Override

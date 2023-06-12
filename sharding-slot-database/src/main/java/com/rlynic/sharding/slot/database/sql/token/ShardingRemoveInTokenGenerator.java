@@ -53,8 +53,10 @@ public class ShardingRemoveInTokenGenerator implements CollectionSQLTokenGenerat
         this.shardingRule = shardingRule;
         this.routeContext = routeContext;
         this.sqlRewriteContext = sqlRewriteContext;
-        this.slotShardingProperties = SpringBeanUtil.getBean(SlotShardingProperties.class);
-        this.slotDatabaseMatcher = SpringBeanUtil.getBean(SlotDatabaseMatcher.class);
+        if(SpringBeanUtil.getApplicationContext()!=null) {
+            this.slotShardingProperties = SpringBeanUtil.getBean(SlotShardingProperties.class);
+            this.slotDatabaseMatcher = SpringBeanUtil.getBean(SlotDatabaseMatcher.class);
+        }
     }
 
     @Override
@@ -104,6 +106,9 @@ public class ShardingRemoveInTokenGenerator implements CollectionSQLTokenGenerat
     public Collection<RemoveInToken> shardingIn(InExpression inExpression, List<Object> parameters){
         //removeInTokens 无需有值，因为这是给外层统一rewrite的，而非针对sharding后具体库的sql语句rewrite
         Collection<RemoveInToken> removeInTokens = new ArrayList<>();
+        if(parameters.isEmpty()){
+            return removeInTokens;
+        }
         inExpression.getExpressionList().forEach(item -> {
             String routedb = "";
             if(item instanceof ParameterMarkerExpressionSegment){

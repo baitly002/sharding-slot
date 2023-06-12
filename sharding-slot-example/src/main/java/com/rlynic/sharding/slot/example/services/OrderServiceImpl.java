@@ -25,12 +25,21 @@ import com.rlynic.sharding.slot.example.repositories.master.MasterOrderRepositor
 import com.rlynic.sharding.slot.example.repositories.sharding.OrderItemRepository;
 import com.rlynic.sharding.slot.example.repositories.sharding.OrderRepository;
 import io.seata.spring.annotation.GlobalTransactional;
+import io.seata.tm.api.GlobalTransaction;
+import io.seata.tm.api.GlobalTransactionContext;
+import org.apache.ibatis.binding.MapperProxy;
+import org.apache.shardingsphere.transaction.ShardingSphereTransactionManagerEngine;
+import org.apache.shardingsphere.transaction.api.TransactionType;
+import org.apache.shardingsphere.transaction.core.TransactionTypeHolder;
+import org.apache.shardingsphere.transaction.spi.ShardingSphereTransactionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.annotation.Resource;
+
+import java.lang.reflect.Proxy;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,8 +64,8 @@ public class OrderServiceImpl implements ExampleService {
     
     @Override
     public void initEnvironment() throws SQLException {
-//        orderRepository.dropTable();
-//        orderItemRepository.dropTable();
+        orderRepository.dropTable();
+        orderItemRepository.dropTable();
         orderRepository.createTableIfNotExists();
         orderRepository.createTableIfNotExistsUndoLog();
         orderItemRepository.createTableIfNotExists();
@@ -64,8 +73,8 @@ public class OrderServiceImpl implements ExampleService {
         orderItemRepository.deleteAll();
 
         //MASTER库
-//        masterOrderRepository.dropTable();
-//        masterOrderItemRepository.dropTable();
+        masterOrderRepository.dropTable();
+        masterOrderItemRepository.dropTable();
         masterOrderRepository.createTableIfNotExists();
         masterOrderRepository.createTableIfNotExistsUndoLog();
         masterOrderItemRepository.createTableIfNotExists();
@@ -162,19 +171,27 @@ public class OrderServiceImpl implements ExampleService {
     @GlobalTransactional(timeoutMills = 60000, name = "test-test")
 //    @Transactional
     public void processSeataFail() throws Exception {
+        TransactionTypeHolder.set(TransactionType.BASE);
+        ShardingSphereTransactionManagerEngine engine = new ShardingSphereTransactionManagerEngine();
+        ShardingSphereTransactionManager manager = engine.getTransactionManager(TransactionType.BASE);
+        manager.begin();
+        GlobalTransaction globalTransaction = GlobalTransactionContext.getCurrentOrCreate();
+//        globalTransaction.begin(timeout * 1000);
+//        SeataTransactionHolder.set(globalTransaction);
+//        ((MapperProxy) ((Proxy)orderRepository).h).sqlSession.getConnection().setAutoCommit(false);
         List<Long> result = new ArrayList<>(10);
         for (int i = 1; i <= 10; i++) {
             Order order = new Order();
 //            order.setOrderId(100+i);//设置主键  seata要求主键要传数据，要么是自增  sharding生成的主键数据拿不到
             order.setUserId(i);
             order.setAddressId(i);
-            order.setStatus("INSERT_SEATA");
+            order.setStatus("INSERT_SEATA66");
             orderRepository.insert(order);
             OrderItem item = new OrderItem();
 //            item.setOrderItemId(200+i);
             item.setOrderId(order.getOrderId());
             item.setUserId(i);
-            item.setStatus("INSERT_SEATA");
+            item.setStatus("INSERT_SEATA66");
             orderItemRepository.insert(item);
             result.add(order.getOrderId());
         }
@@ -182,10 +199,28 @@ public class OrderServiceImpl implements ExampleService {
 //        order.setOrderId(1000);
         order.setUserId(10);
         order.setAddressId(20);
-        order.setStatus("INSERT_SEATA_MASTER");
+        order.setStatus("INSERT_SEATA_MASTER66");
         masterOrderRepository.insert(order);
         throw new RuntimeException("seata-测试异常回滚");
     }
+
+    @GlobalTransactional(timeoutMills = 60000, name = "test-test")
+    public void deleteSharding() throws Exception {
+//        TransactionTypeHolder.set(TransactionType.BASE);
+//        ShardingSphereTransactionManagerEngine engine = new ShardingSphereTransactionManagerEngine();
+//        ShardingSphereTransactionManager manager = engine.getTransactionManager(TransactionType.BASE);
+//        manager.begin();
+//        GlobalTransaction globalTransaction = GlobalTransactionContext.getCurrentOrCreate();
+
+        List<Long> ids = new ArrayList<>();
+        ids.add(874973121336049664L);
+        ids.add(874973117733142528L);
+        ids.add(874973105057955840L);
+        orderItemRepository.deleteOrderIds(ids);
+
+        throw new RuntimeException("seata-删除异常回滚");
+    }
+
     
     @Override
     @Transactional

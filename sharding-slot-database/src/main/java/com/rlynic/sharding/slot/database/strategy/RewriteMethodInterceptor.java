@@ -41,16 +41,24 @@ public class RewriteMethodInterceptor {
 //            @AllArguments Object[] argumengts,
             // 正在执行的方法的指定参数
             @Argument(0) SQLStatement sqlStatement,
-            @Argument(1) Map<RouteUnit, SQLRewriteUnit> sqlRewriteUnits,
+            @Argument(1) Map<RouteUnit, SQLRewriteUnit> sqlRewriteUnits
             // 目标对象的一个代理
 //            @Super Object delegate,
             // 方法的调用者对象 对原始方法的调用依靠它
-            @SuperCall Callable<Map<RouteUnit, SQLRewriteUnit>> callable
-    ) throws Exception {
+//            @SuperCall Callable<Map<RouteUnit, SQLRewriteUnit>> callable
+    ){
 
         Map<String, List<ExpressionSegment>> removeParameterMarkerMap = RemoveParameterMarkerHolder.get();
         if (removeParameterMarkerMap == null) {
-            return callable.call();
+//            callable.call();
+            Map<RouteUnit, SQLRewriteUnit> result = new LinkedHashMap<>(sqlRewriteUnits.size(), 1);
+            for (Map.Entry<RouteUnit, SQLRewriteUnit> entry : sqlRewriteUnits.entrySet()) {
+                DatabaseType storageType = storageTypes.get(entry.getKey().getDataSourceMapper().getActualName());
+                String sql = translatorRule.translate(entry.getValue().getSql(), sqlStatement, protocolType, storageType);
+                SQLRewriteUnit sqlRewriteUnit = new SQLRewriteUnit(sql, entry.getValue().getParameters());
+                result.put(entry.getKey(), sqlRewriteUnit);
+            }
+            return result;
         } else {
             Map<RouteUnit, SQLRewriteUnit> result = new LinkedHashMap<>(sqlRewriteUnits.size(), 1);
             for (Map.Entry<RouteUnit, SQLRewriteUnit> entry : sqlRewriteUnits.entrySet()) {

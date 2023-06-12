@@ -19,7 +19,9 @@ public final class ShardingSlotInsertColumnTokenGenerator extends AbstractBaseSl
         Optional<InsertColumnsSegment> sqlSegment = insertStatementContext.getSqlStatement().getInsertColumns();
         return sqlSegment.isPresent() && !sqlSegment.get().getColumns().isEmpty()
                 && !insertStatementContext.getColumnNames().contains(slotShardingProperties.getColumn())
-                && shardingRule.getAllTables().contains(insertStatementContext.getSqlStatement().getTable().getTableName().getIdentifier().getValue());
+                && shardingRule.getAllTables().contains(insertStatementContext.getSqlStatement().getTable().getTableName().getIdentifier().getValue())
+                && "slotAlgorithm".equalsIgnoreCase(shardingRule.getTableRule(insertStatementContext.getSqlStatement().getTable().getTableName().getIdentifier().getValue())
+                .getDatabaseShardingStrategyConfig().getShardingAlgorithmName());
     }
 
     @Override
