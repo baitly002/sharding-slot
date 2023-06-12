@@ -41,10 +41,10 @@ rules:
 #         strategy: standard
 #         algorithmClassName: com.rlynic.sharding.slot.database.strategy.HashSlotShardingAlgorithm
 #       type: CLASS_BASED
-    xid_inline:
-      type: INLINE
+    hash_mod:
+      type: HASH_MOD
       props:
-        algorithm-expression: ds-${branch_id % 3}
+        sharding-count: 3
   tables:
     t_order:
       actualDataNodes: ds-$->{0..2}.t_order
@@ -68,7 +68,7 @@ rules:
       actualDataNodes: ds-$->{0..2}.undo_log
       databaseStrategy:
         standard:
-          shardingAlgorithmName: xid_inline
+          shardingAlgorithmName: hash_mod
           shardingColumn: branch_id
   keyGenerators:
     snowflake:
