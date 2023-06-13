@@ -197,6 +197,7 @@ public class ShardingRemoveInTokenGenerator implements CollectionSQLTokenGenerat
 
     public String match(Object key){
         try{
+            //TODO 目前仅支持hash-slot算法的in语句重写，其他算法暂不支持
             String s = String.valueOf(key);
             int slot = CRC16.CRC16_CCITT(s.getBytes()) & slotShardingProperties.getNumber() - 1;
             return slotDatabaseMatcher.match(slot);

@@ -1,6 +1,5 @@
 package com.rlynic.sharding.slot.database.sql.token;
 
-import com.rlynic.sharding.slot.database.SlotContextHolder;
 import com.rlynic.sharding.slot.database.configuration.SlotShardingProperties;
 import com.rlynic.sharding.slot.database.util.SpringBeanUtil;
 import lombok.Setter;
