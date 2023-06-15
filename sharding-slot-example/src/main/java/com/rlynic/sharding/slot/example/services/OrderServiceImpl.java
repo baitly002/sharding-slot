@@ -213,9 +213,9 @@ public class OrderServiceImpl implements ExampleService {
 //        GlobalTransaction globalTransaction = GlobalTransactionContext.getCurrentOrCreate();
 
         List<Long> ids = new ArrayList<>();
-        ids.add(874973121336049664L);
-        ids.add(874973117733142528L);
-        ids.add(874973105057955840L);
+        ids.add(874973093968216064L);
+        ids.add(874973101085949952L);
+        ids.add(874973128017575936L);
         orderItemRepository.deleteOrderIds(ids);
 
         throw new RuntimeException("seata-删除异常回滚");

@@ -29,10 +29,19 @@ public class ShardingEnvironmentPostProcessor implements EnvironmentPostProcesso
 
     private ResourceLoader resourceLoader = new DefaultResourceLoader();
     private PropertiesPropertySourceLoader propertySourcesLoader = new PropertiesPropertySourceLoader();
+    private static ConfigurableEnvironment environment = null;
 
     private String[] propertiesLocations = {
             "classpath:/META-INF/sharding-constants.properties"
     };
+
+    public static String resoveConfig(String text){
+        if(environment != null){
+            return environment.resolvePlaceholders(text);
+        }else{
+            return text;
+        }
+    }
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
@@ -44,6 +53,7 @@ public class ShardingEnvironmentPostProcessor implements EnvironmentPostProcesso
                     propertySource.forEach(p -> environment.getPropertySources().addLast(p));
                 }
             }
+            ShardingEnvironmentPostProcessor.environment = environment;
         }catch(IOException e){
             log.error("the sharding config failed to load", e);
         }
