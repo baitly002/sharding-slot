@@ -15,6 +15,8 @@ import net.bytebuddy.matcher.ElementMatchers;
 import net.bytebuddy.pool.TypePool;
 import net.bytebuddy.utility.JavaModule;
 import org.apache.shardingsphere.driver.jdbc.core.connection.ShardingSphereConnection;
+import org.apache.shardingsphere.driver.jdbc.core.resultset.GeneratedKeysResultSet;
+import org.apache.shardingsphere.driver.jdbc.unsupported.AbstractUnsupportedOperationResultSet;
 import org.apache.shardingsphere.infra.rewrite.engine.RouteSQLRewriteEngine;
 
 import java.lang.reflect.Modifier;
@@ -45,14 +47,16 @@ public class ShardingJdbcCoreAgent {
             ByteBuddyAgent.install();
 
             //修改GeneratedKeysResultSet 增加isAfterLast的方法实现，seata需要调用
-            TypePool typePool = TypePool.Default.ofSystemLoader();
-            new ByteBuddy()
-                    .redefine(typePool.describe("org.apache.shardingsphere.driver.jdbc.core.resultset.GeneratedKeysResultSet").resolve(), // do not use 'Bar.class'  warning: Working with unloaded classes
-                            ClassFileLocator.ForClassLoader.ofSystemLoader())
-                    .defineMethod("isAfterLast", boolean.class, Modifier.PUBLIC).intercept(FixedValue.value(true))
-                    .make()
-                    .load(ClassLoader.getSystemClassLoader(), ClassLoadingStrategy.Default.INJECTION)
-                    .getLoaded();
+//            TypePool typePool = TypePool.Default.ofSystemLoader();
+
+//            TypePool typePool = TypePool.Default.ofSystemLoader();
+//            new ByteBuddy()
+//                    .redefine(typePool.describe("org.apache.shardingsphere.driver.jdbc.core.resultset.GeneratedKeysResultSet").resolve(), // do not use 'Bar.class'  warning: Working with unloaded classes
+//                            ClassFileLocator.ForClassLoader.ofSystemLoader())
+//                    .defineMethod("isAfterLast", boolean.class, Modifier.PUBLIC).intercept(FixedValue.value(true))
+//                    .make()
+//                    .load(ClassLoader.getSystemClassLoader(), ClassLoadingStrategy.Default.INJECTION)
+//                    .getLoaded();
 
 
             //subclass() 不能继承基本类型、数组、final类型的类  Cannot subclass primitive, array or final types
@@ -85,6 +89,9 @@ public class ShardingJdbcCoreAgent {
                     .type(ElementMatchers.is(RouteSQLRewriteEngine.class))
                     .transform((builder, type, classLoader, module, protectionDomain) ->
                             builder.method(ElementMatchers.named("translate")).intercept(MethodDelegation.to(RewriteMethodInterceptor.class)))
+                    .type(ElementMatchers.is(AbstractUnsupportedOperationResultSet.class))
+                    .transform((builder, type, classLoader, module, protectionDomain) ->
+                            builder.method(ElementMatchers.named("isAfterLast")).intercept(FixedValue.value(true)))
                     .disableClassFormatChanges() //bytebuddy详细日志
 //                    .with(AgentBuilder.Listener.StreamWriting.toSystemOut()) //bytebuddy详细日志
                     .with(RETRANSFORMATION) //bytebuddy详细日志
