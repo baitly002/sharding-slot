@@ -1,0 +1,28 @@
+[
+  {
+    "name": "com.rlynic.sharding.slot.example.entities.OrderItem",
+    "allPublicConstructors": true,
+    "allPublicMethods": true
+  },
+  {
+    "name": "com.rlynic.sharding.slot.example.repositories.master.MasterOrderItemRepository",
+    "allPublicMethods": true
+  },
+  {
+    "name": "com.rlynic.sharding.slot.example.entities.Order",
+    "allPublicConstructors": true,
+    "allPublicMethods": true
+  },
+  {
+    "name": "com.rlynic.sharding.slot.example.repositories.master.MasterOrderRepository",
+    "allPublicMethods": true
+  },
+  {
+    "name": "com.rlynic.sharding.slot.example.repositories.sharding.OrderItemRepository",
+    "allPublicMethods": true
+  },
+  {
+    "name": "com.rlynic.sharding.slot.example.repositories.sharding.OrderRepository",
+    "allPublicMethods": true
+  }
+]

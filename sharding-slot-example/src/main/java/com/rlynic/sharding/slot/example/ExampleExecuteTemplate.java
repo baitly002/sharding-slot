@@ -23,9 +23,9 @@ public final class ExampleExecuteTemplate {
         try {
 //            exampleService.initEnvironment();
 //            exampleService.processSuccess();
-//            exampleService.processSeataFail();
+            exampleService.processSeataFail();
 //            exampleService.selectIn();
-            exampleService.deleteSharding();
+//            exampleService.deleteSharding();
         } finally {
 //            exampleService.cleanEnvironment();
         }

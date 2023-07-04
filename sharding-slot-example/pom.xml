@@ -1,10 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-		<groupId>com.rlynic</groupId>
+        <groupId>com.rlynic</groupId>
         <artifactId>sharding-slot</artifactId>
         <version>1.5.3-SNAPSHOT</version>
-	</parent>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>sharding-slot-example</artifactId>
     <packaging>jar</packaging>
@@ -27,14 +27,20 @@
             <groupId>org.apache.shardingsphere</groupId>
             <artifactId>shardingsphere-jdbc-core</artifactId>
             <version>${shardingsphere.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.calcite.avatica</groupId>
+                    <artifactId>avatica-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
-        <!-- 使用 BASE 事务时，需要引入此模块 -->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.shardingsphere</groupId>-->
-<!--            <artifactId>shardingsphere-transaction-base-seata-at</artifactId>-->
-<!--            <version>${shardingsphere.version}</version>-->
-<!--        </dependency>-->
+                <!-- 使用 BASE 事务时，需要引入此模块 -->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.shardingsphere</groupId>-->
+        <!--            <artifactId>shardingsphere-transaction-base-seata-at</artifactId>-->
+        <!--            <version>${shardingsphere.version}</version>-->
+        <!--        </dependency>-->
 
 
         <!-- sharding 5.2.1 需要用到-->
@@ -45,77 +51,60 @@
         </dependency>
 
 
-        <!-- 1.5.0用 -->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.shardingsphere</groupId>-->
-<!--            <artifactId>shardingsphere-jdbc-core</artifactId>-->
-<!--            <version>5.1.2.1</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.shardingsphere</groupId>-->
-<!--            <artifactId>shardingsphere-jdbc-core-spring-boot-starter</artifactId>-->
-<!--            <version>5.1.2</version>-->
-<!--            <exclusions>-->
-<!--                <exclusion>-->
-<!--                    <groupId>org.apache.shardingsphere</groupId>-->
-<!--                    <artifactId>shardingsphere-jdbc-core</artifactId>-->
-<!--                </exclusion>-->
-<!--            </exclusions>-->
-<!--        </dependency>-->
+                <!-- 1.5.0用 -->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.shardingsphere</groupId>-->
+        <!--            <artifactId>shardingsphere-jdbc-core</artifactId>-->
+        <!--            <version>5.1.2.1</version>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.shardingsphere</groupId>-->
+        <!--            <artifactId>shardingsphere-jdbc-core-spring-boot-starter</artifactId>-->
+        <!--            <version>5.1.2</version>-->
+        <!--            <exclusions>-->
+        <!--                <exclusion>-->
+        <!--                    <groupId>org.apache.shardingsphere</groupId>-->
+        <!--                    <artifactId>shardingsphere-jdbc-core</artifactId>-->
+        <!--                </exclusion>-->
+        <!--            </exclusions>-->
+        <!--        </dependency>-->
 
-<!--        <dependency>-->
-<!--            <groupId>org.apache.shardingsphere</groupId>-->
-<!--            <artifactId>shardingsphere-transaction-base-seata-at</artifactId>-->
-<!--            <version>5.1.2</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.shardingsphere</groupId>-->
-<!--            <artifactId>shardingsphere-transaction-xa-core</artifactId>-->
-<!--            <version>5.1.2</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.shardingsphere</groupId>-->
-<!--            <artifactId>shardingsphere-transaction-xa-core</artifactId>-->
-<!--            <version>5.1.2</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.shardingsphere</groupId>-->
+        <!--            <artifactId>shardingsphere-transaction-base-seata-at</artifactId>-->
+        <!--            <version>5.1.2</version>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.shardingsphere</groupId>-->
+        <!--            <artifactId>shardingsphere-transaction-xa-core</artifactId>-->
+        <!--            <version>5.1.2</version>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.shardingsphere</groupId>-->
+        <!--            <artifactId>shardingsphere-transaction-xa-core</artifactId>-->
+        <!--            <version>5.1.2</version>-->
+        <!--        </dependency>-->
         <dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
             <version>8.0.30</version>
-		</dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.bingo.link</groupId>-->
-<!--            <artifactId>link-dtx</artifactId>-->
-<!--            <version>4.7.3-beta-SNAPSHOT</version>-->
-<!--        </dependency>-->
+        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>com.bingo.link</groupId>-->
+        <!--            <artifactId>link-dtx</artifactId>-->
+        <!--            <version>4.7.3-beta-SNAPSHOT</version>-->
+        <!--        </dependency>-->
+
+        <!--        <dependency>-->
+        <!--            <groupId>io.seata</groupId>-->
+        <!--            <artifactId>seata-spring-boot-starter</artifactId>-->
+        <!--            <version>1.6.1</version>-->
+        <!--        </dependency>-->
 
 <!--        <dependency>-->
 <!--            <groupId>io.seata</groupId>-->
 <!--            <artifactId>seata-spring-boot-starter</artifactId>-->
-<!--            <version>1.6.1</version>-->
-<!--        </dependency>-->
-
-        <dependency>
-            <groupId>io.seata</groupId>
-            <artifactId>seata-spring-boot-starter</artifactId>
-            <version>1.7.0-native-rc2</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.antlr</groupId>
-                    <artifactId>antlr4</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr4-runtime</artifactId>
-            <version>4.10.1</version>
-        </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>io.seata</groupId>-->
-<!--            <artifactId>seata-spring-boot-starter</artifactId>-->
-<!--            <version>1.5.1</version>-->
+<!--            <version>1.7.0-native-rc2</version>-->
 <!--            <exclusions>-->
 <!--                <exclusion>-->
 <!--                    <groupId>org.antlr</groupId>-->
@@ -123,27 +112,138 @@
 <!--                </exclusion>-->
 <!--            </exclusions>-->
 <!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.antlr</groupId>-->
+<!--            <artifactId>antlr4-runtime</artifactId>-->
+<!--            <version>4.10.1</version>-->
+<!--        </dependency>-->
 
+        <!--        <dependency>-->
+        <!--            <groupId>io.seata</groupId>-->
+        <!--            <artifactId>seata-spring-boot-starter</artifactId>-->
+        <!--            <version>1.5.1</version>-->
+        <!--            <exclusions>-->
+        <!--                <exclusion>-->
+        <!--                    <groupId>org.antlr</groupId>-->
+        <!--                    <artifactId>antlr4</artifactId>-->
+        <!--                </exclusion>-->
+        <!--            </exclusions>-->
+        <!--        </dependency>-->
 
 
         <dependency>
-			<groupId>com.zaxxer</groupId>
-			<artifactId>HikariCP</artifactId>
-		</dependency>
-	</dependencies>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.rometools</groupId>
+            <artifactId>rome</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>com.github.nkb03</groupId>-->
+        <!--            <artifactId>hextant-core</artifactId>-->
+        <!--            <version>1.2.2</version>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.mparticle</groupId>-->
+        <!--            <artifactId>smartype-generator</artifactId>-->
+        <!--            <version>1.6.1</version>-->
+        <!--        </dependency>-->
+        <dependency>
+            <groupId>org.jetbrains.kotlinx</groupId>
+            <artifactId>kotlinx-serialization-runtime</artifactId>
+            <version>1.0-M1-1.4.0-rc</version>
+        </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>org.mybatis.spring.native</groupId>-->
+<!--            <artifactId>mybatis-spring-native-core</artifactId>-->
+<!--            <version>0.1.0-SNAPSHOT</version>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.experimental</groupId>-->
+<!--            <artifactId>spring-native</artifactId>-->
+<!--            <version>0.12.2</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.experimental</groupId>-->
+<!--            <artifactId>spring-aot</artifactId>-->
+<!--            <version>0.12.2</version>-->
+<!--        </dependency>-->
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>sonatype-oss-snapshots</id>
+            <name>Sonatype OSS Snapshots Repository</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+    </repositories>
+
+    <!--    <build>-->
+    <!--        <plugins>-->
+    <!--            <plugin>-->
+    <!--                <groupId>org.springframework.boot</groupId>-->
+    <!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+    <!--                <configuration>-->
+    <!--                    <excludes>-->
+    <!--                        <exclude>-->
+    <!--                            <groupId>org.projectlombok</groupId>-->
+    <!--                            <artifactId>lombok</artifactId>-->
+    <!--                        </exclude>-->
+    <!--                    </excludes>-->
+    <!--                </configuration>-->
+    <!--            </plugin>-->
+    <!--        </plugins>-->
+    <!--    </build>-->
     <build>
         <plugins>
+<!--            <plugin>-->
+<!--                <groupId>org.graalvm.nativeimage</groupId>-->
+<!--                <artifactId>native-image-maven-plugin</artifactId>-->
+<!--                <version>21.2.0</version>   &lt;!&ndash;(1)&ndash;&gt;-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>native-image</goal>-->
+<!--                        </goals>-->
+<!--                        <phase>package</phase>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--                <configuration>-->
+<!--                    <imageName>${project.name}</imageName>    &lt;!&ndash;(2)&ndash;&gt;-->
+<!--                    <mainClass>com.rlynic.sharding.slot.example.ShardingExampleApplication</mainClass>  &lt;!&ndash;(3)&ndash;&gt;-->
+<!--                    <buildArgs>-->
+<!--                        -H:+PrintClassInitialization-->
+<!--                        -H:+ReportExceptionStackTraces-->
+<!--                        -H:+AllowDeprecatedBuilderClassesOnImageClasspath-->
+<!--                        &#45;&#45;initialize-at-run-time=org.slf4j.LoggerFactory-->
+<!--                        &#45;&#45;initialize-at-run-time=ch.qos.logback.classic.Logger-->
+<!--                    </buildArgs>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
+            <plugin>
+                <groupId>org.graalvm.buildtools</groupId>
+                <artifactId>native-maven-plugin</artifactId>
+                <configuration>
+                    <buildArgs>
+                        -H:+AllowDeprecatedBuilderClassesOnImageClasspath
+                        --enable-url-protocols=http
+                        -Djavax.xml.accessExternalDTD=all
+                        -Djavax.xml.accessExternalSchema=all
+<!--                        -Djdk.serialFilter=org.mybatis.spring.nativex.sample.cache.*;java.util.*;java.lang.*;!*-->
+                    </buildArgs>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
+                    <image>
+                        <builder>dashaun/builder:tiny</builder>
+                    </image>
                 </configuration>
             </plugin>
         </plugins>

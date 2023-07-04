@@ -27,7 +27,7 @@ public class ShardingAutoConfiguration{
 
     @Bean
     public SlotDatabaseMatcher slotDatabaseMatcher(SlotShardingProperties slotShardingProperties){
-        ShardingJdbcCoreAgent.getInstance().init();
+//        ShardingJdbcCoreAgent.getInstance().init();
         return new SlotDatabaseMatcher(slotShardingProperties);
     }
 

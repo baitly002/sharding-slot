@@ -7,7 +7,6 @@ import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -21,12 +20,25 @@ import javax.sql.DataSource;
 @Configuration
 @MapperScan(basePackages = "com.rlynic.sharding.slot.example.repositories.master",
         sqlSessionTemplateRef = "localSqlSessionTemplate"/*, sqlSessionFactoryRef = "localSqlSessionFactory"*/)
+//@MyBatisResourcesScan(typeAliasesPackages = "com.rlynic.sharding.slot.example.entities", mapperLocationPatterns = "META-INF/**/*Mapper.xml")
 public class MasterMapperConfiguration {
 
     @Bean
-    @ConfigurationProperties(prefix = "spring.datasource.master")
+//    @ConfigurationProperties(prefix = "spring.datasource.master")
     public HikariConfig hikariConfig() {
-        return new HikariConfig();
+        HikariConfig hikariConfig = new HikariConfig();
+        //driver-class-name: com.mysql.cj.jdbc.Driver
+        //      type: com.zaxxer.hikari.HikariDataSource
+        //      #      jdbc-url: jdbc:mysql://10.201.62.180:3306/demo_ds_master?characterEncoding=utf-8&useSSL=false&autoReconnect=true&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true&useInformationSchema=false
+        //      jdbc-url: jdbc:mysql://10.200.20.94:30093/demo_ds_master?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowMultiQueries=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
+        //      username: root
+        //      password: Link$2013
+        hikariConfig.setPoolName("localDatasourcePool");
+        hikariConfig.setUsername("root");
+        hikariConfig.setPassword("Link$2013");
+        hikariConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        hikariConfig.setJdbcUrl("jdbc:mysql://10.200.20.94:30093/demo_ds_master?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowMultiQueries=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true");
+        return hikariConfig;
     }
 
     @Bean(name="localDataSource")
@@ -53,8 +65,8 @@ public class MasterMapperConfiguration {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(dataSource);
 //        bean.setDataSource(new HikariDataSource(hikariConfig));
-        bean.setConfigLocation(new PathMatchingResourcePatternResolver().getResource("classpath:/META-INF/mybatis-master-config.xml"));
-//        bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath*:/**/*Mapper.xml"));
+//        bean.setConfigLocation(new PathMatchingResourcePatternResolver().getResource("classpath:/META-INF/mybatis-master-config.xml"));
+        bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath*:/**/Master*Mapper.xml"));
         return bean.getObject();
     }
 

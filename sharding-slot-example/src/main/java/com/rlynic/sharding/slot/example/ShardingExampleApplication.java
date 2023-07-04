@@ -5,7 +5,6 @@
  */
 package com.rlynic.sharding.slot.example;
 
-import io.seata.spring.annotation.datasource.EnableAutoDataSourceProxy;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.transaction.jta.JtaAutoConfiguration;
@@ -24,7 +23,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 //@EnableAutoDataSourceProxy(excludes = "com.rlynic.sharding.slot.example.config.sharding.MyShardingSphereDataSource")
 
 @SpringBootApplication(exclude = {JtaAutoConfiguration.class/*, ShardingSphereAutoConfiguration.class*/})
-@EnableAutoDataSourceProxy(useJdkProxy = true)
+//@EnableAutoDataSourceProxy(useJdkProxy = true)
 public class ShardingExampleApplication {
 
 

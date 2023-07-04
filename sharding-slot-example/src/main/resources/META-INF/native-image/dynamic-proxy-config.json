@@ -1,0 +1,7 @@
+[
+  {
+    "interfaces": [
+      "com.rlynic.sharding.slot.example.repositories.master.MasterOrderRepository"
+    ]
+  }
+]

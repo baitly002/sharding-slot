@@ -47,7 +47,7 @@ seata:
       name: file.conf
   service:
     grouplist:
-      default: 10.200.21.167:28080
+      default: 10.200.20.140:28080
     #      default: 10.201.62.180:8091
     vgroup-mapping:
       springboot-seata-group: default

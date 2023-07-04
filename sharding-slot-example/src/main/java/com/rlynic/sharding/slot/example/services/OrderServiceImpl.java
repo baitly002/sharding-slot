@@ -24,22 +24,11 @@ import com.rlynic.sharding.slot.example.repositories.master.MasterOrderItemRepos
 import com.rlynic.sharding.slot.example.repositories.master.MasterOrderRepository;
 import com.rlynic.sharding.slot.example.repositories.sharding.OrderItemRepository;
 import com.rlynic.sharding.slot.example.repositories.sharding.OrderRepository;
-import io.seata.spring.annotation.GlobalTransactional;
-import io.seata.tm.api.GlobalTransaction;
-import io.seata.tm.api.GlobalTransactionContext;
-import org.apache.ibatis.binding.MapperProxy;
-import org.apache.shardingsphere.transaction.ShardingSphereTransactionManagerEngine;
-import org.apache.shardingsphere.transaction.api.TransactionType;
-import org.apache.shardingsphere.transaction.core.TransactionTypeHolder;
-import org.apache.shardingsphere.transaction.spi.ShardingSphereTransactionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.Resource;
-
-import java.lang.reflect.Proxy;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,16 +39,25 @@ import java.util.List;
 public class OrderServiceImpl implements ExampleService {
     private final static Logger log = LoggerFactory.getLogger(OrderServiceImpl.class);
 
-    @Resource
     private MasterOrderRepository masterOrderRepository;
 
-    @Resource
     private MasterOrderItemRepository masterOrderItemRepository;
 
-    @Resource
+    public OrderServiceImpl(MasterOrderRepository masterOrderRepository, MasterOrderItemRepository masterOrderItemRepository){
+        this.masterOrderRepository = masterOrderRepository;
+        this.masterOrderItemRepository = masterOrderItemRepository;
+        if(masterOrderRepository!=null) {
+            System.out.println("masterOrderRepository!=null");
+        }
+        if(masterOrderItemRepository!=null){
+            System.out.println("masterOrderItemRepository!=null");
+        }
+    }
+
+//    @Resource
     private OrderRepository orderRepository;
     
-    @Resource
+//    @Resource
     private OrderItemRepository orderItemRepository;
     
     @Override
@@ -168,14 +166,28 @@ public class OrderServiceImpl implements ExampleService {
         System.out.println("-------------- Process Success Finish --------------");
     }
 
-    @GlobalTransactional(timeoutMills = 60000, name = "test-test")
+//    @GlobalTransactional(timeoutMills = 60000, name = "test-test")
 //    @Transactional
     public void processSeataFail() throws Exception {
-        TransactionTypeHolder.set(TransactionType.BASE);
-        ShardingSphereTransactionManagerEngine engine = new ShardingSphereTransactionManagerEngine();
-        ShardingSphereTransactionManager manager = engine.getTransactionManager(TransactionType.BASE);
-        manager.begin();
-        GlobalTransaction globalTransaction = GlobalTransactionContext.getCurrentOrCreate();
+
+        Order order = new Order();
+//        order.setOrderId(1000);
+        order.setUserId(10);
+        order.setAddressId(20);
+        order.setStatus("INSERT_SEATA_MASTER66");
+        masterOrderRepository.insert(order);
+        throw new RuntimeException("seata-测试异常回滚");
+    }
+
+//    @GlobalTransactional(timeoutMills = 60000, name = "test-test")
+//    @Transactional
+    public void processSeataFailSharding() throws Exception {
+//        TransactionTypeHolder.set(TransactionType.BASE);
+//        ShardingSphereTransactionManagerEngine engine = new ShardingSphereTransactionManagerEngine();
+//        ShardingSphereTransactionManager manager = engine.getTransactionManager(TransactionType.BASE);
+//        manager.begin();
+//        GlobalTransaction globalTransaction = GlobalTransactionContext.getCurrentOrCreate();
+
 //        globalTransaction.begin(timeout * 1000);
 //        SeataTransactionHolder.set(globalTransaction);
 //        ((MapperProxy) ((Proxy)orderRepository).h).sqlSession.getConnection().setAutoCommit(false);
@@ -201,10 +213,10 @@ public class OrderServiceImpl implements ExampleService {
         order.setAddressId(20);
         order.setStatus("INSERT_SEATA_MASTER66");
         masterOrderRepository.insert(order);
-        throw new RuntimeException("seata-测试异常回滚");
+//        throw new RuntimeException("seata-测试异常回滚");
     }
 
-    @GlobalTransactional(timeoutMills = 60000, name = "test-test")
+//    @GlobalTransactional(timeoutMills = 60000, name = "test-test")
     public void deleteSharding() throws Exception {
 //        TransactionTypeHolder.set(TransactionType.BASE);
 //        ShardingSphereTransactionManagerEngine engine = new ShardingSphereTransactionManagerEngine();
