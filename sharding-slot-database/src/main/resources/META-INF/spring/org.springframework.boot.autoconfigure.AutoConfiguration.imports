@@ -1,1 +1,2 @@
 com.rlynic.sharding.slot.database.configuration.ShardingAutoConfiguration
+com.rlynic.sharding.slot.database.configuration.SlotShardingBeanPostProcessor

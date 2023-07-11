@@ -8,6 +8,7 @@ package com.rlynic.sharding.slot.database.configuration;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import java.util.Map;
 
@@ -23,11 +24,14 @@ public class SlotShardingProperties {
 
     private String column="slot";
     private int number=16384;
+    @NestedConfigurationProperty
     private Range range;
 //    private List<String> datasourceNames;
 //    private List<String> tableNames;
     //分库的数据库个数
     private Integer size;
+    //强制按新分库大小（当分库大小新旧不一致时）
+    private Boolean forceSharding;
     //分库的数据库名后缀从0开始还是从1开始
     private Integer dbStartIndex = 0;
     //分库的数据库逻辑名称前缀，用于slot-range及shardingsphere的配置,以下示例的[pan-1],[pan-$->{1..${slot.sharding.size}}.pan_file]
@@ -39,7 +43,12 @@ public class SlotShardingProperties {
     private String tableRules;
     //jdbc-url扩展参数
     private String urlArgs;
-
+    //是否打印分库后的sql
+    private String sqlShow;
+    //sharding jdbc 的驱动
+    private String driverClassName = "org.apache.shardingsphere.driver.ShardingSphereDriver";
+    //sharding jdbc 的配置文件url
+    private String jdbcUrl = "jdbc:shardingsphere:spring:auto";
 
     @Data
     @NoArgsConstructor

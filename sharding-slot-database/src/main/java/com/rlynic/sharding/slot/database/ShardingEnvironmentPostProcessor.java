@@ -10,9 +10,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.boot.env.PropertiesPropertySourceLoader;
+import org.springframework.core.Ordered;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.PropertiesPropertySource;
 import org.springframework.core.env.PropertySource;
+import org.springframework.core.env.StandardEnvironment;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -28,7 +30,7 @@ import java.util.Properties;
  *
  * @author crisis
  */
-public class ShardingEnvironmentPostProcessor implements EnvironmentPostProcessor {
+public class ShardingEnvironmentPostProcessor implements EnvironmentPostProcessor, Ordered {
     private final static Logger log = LoggerFactory.getLogger(ShardingEnvironmentPostProcessor.class);
 
     private ResourceLoader resourceLoader = new DefaultResourceLoader();
@@ -38,6 +40,14 @@ public class ShardingEnvironmentPostProcessor implements EnvironmentPostProcesso
     private String[] propertiesLocations = {
             "classpath:/META-INF/sharding-constants.properties"
     };
+
+    public static ConfigurableEnvironment getEnvironment(){
+        if(environment != null){
+            return environment;
+        }else{
+            return new StandardEnvironment();
+        }
+    }
 
     public static String resoveConfig(String text){
         if(environment != null){
@@ -58,11 +68,54 @@ public class ShardingEnvironmentPostProcessor implements EnvironmentPostProcesso
                 }
             }
             ShardingEnvironmentPostProcessor.environment = environment;
-            Properties properties = creatShardingConfig(environment);
-            PropertiesPropertySource pps = new PropertiesPropertySource("sharding-jdbc.properties", properties);
-            environment.getPropertySources().addLast(pps);
+//            if(environment.containsProperty("slot.sharding.size")) {
+//                slotAuto(environment);
+//            }
         }catch(IOException e){
             log.error("the sharding config failed to load", e);
+        }
+    }
+
+    public void slotAuto(ConfigurableEnvironment environment){
+        Properties properties = new Properties();
+        Integer size = environment.getProperty("slot.sharding.size", Integer.class);
+        if(size == null){
+            log.error("The system must be configured [slot.sharding.size] value");
+        }
+        if(!is2pow(size)){
+            log.warn("配置 [slot.sharding.size] 的值最好是2的n次方！");
+        }
+        String logicDatasourcePrefix = environment.getProperty("slot.sharding.logic-datasource-prefix", "pan");
+        Integer dbStartIndex = environment.getProperty("slot.sharding.db-start-index", Integer.class, 0);
+        Integer maxSlot = environment.getProperty("slot.sharding.number", Integer.class, 16384);
+        if(!environment.containsProperty("slot.sharding.range.datasource."+logicDatasourcePrefix+"-"+dbStartIndex)){
+            //自动计算每个库的slot范围
+            calSlotRange(maxSlot, size, logicDatasourcePrefix, dbStartIndex, properties, environment);
+        }
+        PropertiesPropertySource pps = new PropertiesPropertySource("slot-auto.properties", properties);
+        environment.getPropertySources().addLast(pps);
+    }
+
+    //计算每个库的slot范围
+    public static void calSlotRange(int maxSlot, int shardingSize, String logicDatasourcePrefix, Integer dbStartIndex,
+                                    Properties properties, ConfigurableEnvironment environment){
+        int val = maxSlot / shardingSize;
+        int rangIndex = 0;
+        for(int i=0; i<shardingSize; i++){
+            int from = rangIndex;
+            int to = 0;
+            if(i == (shardingSize-1)){
+                to = maxSlot-1;
+            }else{
+                to = rangIndex+val-1;
+            }
+            rangIndex += val;
+            String k = "slot.sharding.range.datasource."+logicDatasourcePrefix+"-"+(i+dbStartIndex);
+            if(!environment.containsProperty(k)) {
+                String v = "{" + from + ", " + to + "}";
+                properties.setProperty(k, v);
+                log.info("slot config: {}={}", k, v);
+            }
         }
     }
 
@@ -153,26 +206,12 @@ public class ShardingEnvironmentPostProcessor implements EnvironmentPostProcesso
         return n!=null && n > 0 && (n & (n-1)) == 0;
     }
 
-    //计算每个库的slot范围
-    public static void calSlotRange(int maxSlot, int shardingSize, String logicDatasourcePrefix, Integer dbStartIndex,
-                                    Properties properties, ConfigurableEnvironment environment){
-        int val = maxSlot / shardingSize;
-        int rangIndex = 0;
-        for(int i=0; i<shardingSize; i++){
-            int from = rangIndex;
-            int to = 0;
-            if(i == (shardingSize-1)){
-                to = maxSlot-1;
-            }else{
-                to = rangIndex+val-1;
-            }
-            rangIndex += val;
-            System.out.println(i + "   " + from + "->" + to);
-            properties.setProperty("slot.sharding.range.datasource."+logicDatasourcePrefix+"-", "{"+from+", "+to+"}");
-        }
-    }
-
     public static void main(String[] args) {
 
+    }
+
+    @Override
+    public int getOrder() {
+        return 100;
     }
 }
