@@ -1,0 +1,96 @@
+mode:
+  type: Standalone
+  repository:
+    type: JDBC
+props:
+  sql-show: true
+dataSources:
+  pan-1:
+    dataSourceClassName: com.zaxxer.hikari.HikariDataSource
+    type: com.zaxxer.hikari.HikariDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    jdbcUrl: ${sharding.datasource.url}/${sharding.datasource.schemaPrefix}_0?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowMultiQueries=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
+    username: ${sharding.datasource.username}
+    password: ${sharding.datasource.password}
+    maximum-pool-size: ${sharding.datasource.maximum-pool-size:100}
+    minimum-idle: ${sharding.datasource.minimum-idle:50}
+  pan-2:
+    dataSourceClassName: com.zaxxer.hikari.HikariDataSource
+    type: com.zaxxer.hikari.HikariDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    jdbcUrl: ${sharding.datasource.url}/${sharding.datasource.schemaPrefix}_1?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowMultiQueries=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
+    username: ${sharding.datasource.username}
+    password: ${sharding.datasource.password}
+    maximum-pool-size: ${sharding.datasource.maximum-pool-size:100}
+    minimum-idle: ${sharding.datasource.minimum-idle:50}
+  pan-3:
+    dataSourceClassName: com.zaxxer.hikari.HikariDataSource
+    type: com.zaxxer.hikari.HikariDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    jdbcUrl: ${sharding.datasource.url}/${sharding.datasource.schemaPrefix}_2?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowMultiQueries=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
+    username: ${sharding.datasource.username}
+    password: ${sharding.datasource.password}
+    maximum-pool-size: ${sharding.datasource.maximum-pool-size:100}
+    minimum-idle: ${sharding.datasource.minimum-idle:50}
+  pan-4:
+    dataSourceClassName: com.zaxxer.hikari.HikariDataSource
+    type: com.zaxxer.hikari.HikariDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    jdbcUrl: ${sharding.datasource.url}/${sharding.datasource.schemaPrefix}_3?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowMultiQueries=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
+    username: ${sharding.datasource.username}
+    password: ${sharding.datasource.password}
+    maximum-pool-size: ${sharding.datasource.maximum-pool-size:100}
+    minimum-idle: ${sharding.datasource.minimum-idle:50}
+
+rules:
+  - !SHARDING
+    shardingAlgorithms:
+      hash-slot:
+        type: HASH_SLOT
+      hash-mod:
+        type: HASH_MOD
+        props:
+          sharding-count: ${slot.sharding.size}
+    tables:
+      pan_file:
+        actualDataNodes: pan-$->{1..${slot.sharding.size}}.pan_file
+        databaseStrategy:
+          standard:
+            shardingAlgorithmName: hash-slot
+            shardingColumn: file_id
+      pan_dir:
+        actualDataNodes: pan-$->{1..${slot.sharding.size}}.pan_dir
+        databaseStrategy:
+          standard:
+            shardingAlgorithmName: hash-slot
+            shardingColumn: dir_id
+      pan_dir_index:
+        actualDataNodes: pan-$->{1..${slot.sharding.size}}.pan_dir_index
+        databaseStrategy:
+          standard:
+            shardingAlgorithmName: hash-slot
+            shardingColumn: dir_id
+      pan_version:
+        actualDataNodes: pan-$->{1..${slot.sharding.size}}.pan_version
+        databaseStrategy:
+          standard:
+            shardingAlgorithmName: hash-slot
+            shardingColumn: data_id
+      pan_permission:
+        actualDataNodes: pan-$->{1..${slot.sharding.size}}.pan_permission
+        databaseStrategy:
+          standard:
+            shardingAlgorithmName: hash-slot
+            shardingColumn: parent_id
+      pan_store:
+        actualDataNodes: pan-$->{1..${slot.sharding.size}}.pan_store
+        databaseStrategy:
+          standard:
+            shardingAlgorithmName: hash-slot
+            shardingColumn: id
+      pan_trash:
+        actualDataNodes: pan-$->{1..${slot.sharding.size}}.pan_trash
+        databaseStrategy:
+          standard:
+            shardingAlgorithmName: hash-slot
+            shardingColumn: root_id
