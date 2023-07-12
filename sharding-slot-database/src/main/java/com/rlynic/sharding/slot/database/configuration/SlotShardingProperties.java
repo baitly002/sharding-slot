@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -20,7 +21,7 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 @ConfigurationProperties(prefix="slot.sharding")
-public class SlotShardingProperties {
+public class SlotShardingProperties implements Serializable {
 
     private String column="slot";
     private int number=16384;
@@ -38,7 +39,7 @@ public class SlotShardingProperties {
     //slot.sharding.range.datasource.pan-1={0, 4095}
     //spring.shardingsphere.rules.sharding.tables.pan_file.actual-data-nodes=pan-$->{1..${slot.sharding.size}}.pan_file
     //spring.shardingsphere.datasource.pan-1.driver-class-name=com.mysql.jdbc.Driver
-    private String logicDatasourcePrefix = "shardingdb";
+    private String logicDatasourcePrefix = "pan";
     //表分库规则,多个用逗号隔开。格式：[表名称.分库字段:分库算法]冒号后可接分库算法，不指定则采用默认,  eg:pan_file.file_id 或 pan_file.file_id:hash-slot 多个：pan_file.file_id:hash-slot, pan_dir.dir_id:mod
     private String tableRules;
     //jdbc-url扩展参数
@@ -52,7 +53,7 @@ public class SlotShardingProperties {
 
     @Data
     @NoArgsConstructor
-    public static class Range{
+    public static class Range implements Serializable{
         private Map<String, String> datasource;
         private Map<String, String> table;
     }
