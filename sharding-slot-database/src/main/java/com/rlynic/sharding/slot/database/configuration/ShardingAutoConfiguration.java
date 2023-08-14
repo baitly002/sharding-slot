@@ -5,7 +5,6 @@
  */
 package com.rlynic.sharding.slot.database.configuration;
 
-import com.rlynic.sharding.plugin.ShardingJdbcCoreAgent;
 import com.rlynic.sharding.slot.database.strategy.SlotDatabaseMatcher;
 import com.rlynic.sharding.slot.database.util.SpringBeanUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +35,6 @@ public class ShardingAutoConfiguration{
     @ConditionalOnClass(RedisTemplate.class)
     @ConditionalOnBean(RedisTemplate.class)
     public SlotDatabaseMatcher slotDatabaseMatcherRedis(SlotShardingProperties slotShardingProperties, RedisTemplate redisTemplate){
-        ShardingJdbcCoreAgent.getInstance().init();
         if(redisTemplate!=null){
             String keySlot = "pan-server:slot";
             if(redisTemplate.hasKey(keySlot)){
@@ -86,7 +84,6 @@ public class ShardingAutoConfiguration{
     @Bean
     @ConditionalOnMissingBean(RedisTemplate.class)
     public SlotDatabaseMatcher slotDatabaseMatcher(SlotShardingProperties slotShardingProperties){
-        ShardingJdbcCoreAgent.getInstance().init();
         return new SlotDatabaseMatcher(slotShardingProperties);
     }
 

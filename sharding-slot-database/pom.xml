@@ -7,11 +7,13 @@
 	</parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>sharding-slot-database</artifactId>
+    <version>1.5.4-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
+        <shardingsphere.version>5.3.2.1</shardingsphere.version>
     </properties>
 
     <dependencies>
@@ -39,7 +41,16 @@
                     <groupId>org.yaml</groupId>
                     <artifactId>snakeyaml</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.apache.shardingsphere</groupId>
+                    <artifactId>shardingsphere-infra-rewrite</artifactId>
+                </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.shardingsphere</groupId>
+            <artifactId>shardingsphere-infra-rewrite</artifactId>
+            <version>${shardingsphere.version}</version>
         </dependency>
         <dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
@@ -51,14 +62,6 @@
                 </exclusion>
             </exclusions>
 		</dependency>
-        <dependency>
-            <groupId>net.bytebuddy</groupId>
-            <artifactId>byte-buddy</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.bytebuddy</groupId>
-            <artifactId>byte-buddy-agent</artifactId>
-        </dependency>
 	</dependencies>
 
 </project>

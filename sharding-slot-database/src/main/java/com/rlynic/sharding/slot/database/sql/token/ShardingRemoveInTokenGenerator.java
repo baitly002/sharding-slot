@@ -1,7 +1,6 @@
 package com.rlynic.sharding.slot.database.sql.token;
 
 import com.rlynic.sharding.slot.database.CRC16;
-import com.rlynic.sharding.slot.database.RemoveParameterMarkerHolder;
 import com.rlynic.sharding.slot.database.configuration.SlotShardingProperties;
 import com.rlynic.sharding.slot.database.context.selectin.engine.SelectInContextEngine;
 import com.rlynic.sharding.slot.database.strategy.HashSlotRouteException;
@@ -13,6 +12,7 @@ import org.apache.shardingsphere.infra.binder.statement.dml.DeleteStatementConte
 import org.apache.shardingsphere.infra.binder.statement.dml.SelectStatementContext;
 import org.apache.shardingsphere.infra.binder.statement.dml.UpdateStatementContext;
 import org.apache.shardingsphere.infra.rewrite.context.SQLRewriteContext;
+import org.apache.shardingsphere.infra.rewrite.engine.RemoveParameterMarkerHolder;
 import org.apache.shardingsphere.infra.rewrite.sql.token.generator.CollectionSQLTokenGenerator;
 import org.apache.shardingsphere.infra.rewrite.sql.token.pojo.SQLToken;
 import org.apache.shardingsphere.infra.route.context.RouteContext;
