@@ -218,6 +218,8 @@ public class SpringClasspathDriverURLProvider implements ShardingSphereDriverURL
             dbConfig.append("    ").append("password: ").append(password).append(newLine());
             dbConfig.append("    ").append("maximum-pool-size: ").append(environment.resolvePlaceholders("${sharding.datasource.maximum-pool-size:100}")).append(newLine());
             dbConfig.append("    ").append("minimum-idle: ").append(environment.resolvePlaceholders("${sharding.datasource.minimum-idle:50}")).append(newLine());
+            dbConfig.append("    ").append("maxPoolSize: ").append(environment.resolvePlaceholders("${sharding.datasource.maximum-pool-size:100}")).append(newLine());
+            dbConfig.append("    ").append("minPoolSize: ").append(environment.resolvePlaceholders("${sharding.datasource.minimum-idle:50}")).append(newLine());
             dbNames.add(logicDatasourcePrefix+"-"+index);
         }
         return dbConfig.toString();
