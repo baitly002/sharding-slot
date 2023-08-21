@@ -141,6 +141,20 @@
         </foreach>
     </select>
 
+    <select id="selectManyPKInIdsAlias" resultMap="baseResultMap">
+        SELECT * FROM t_order_item i WHERE (i.user_id, i.order_id, i.order_item_id) in
+        <foreach item="item" index="index" collection="items" open="(" separator="," close=")">
+            (#{item.userId}, #{item.orderId}, #{item.orderItemId})
+        </foreach>
+    </select>
+
+    <select id="selectManyPKInIds" resultMap="baseResultMap">
+        SELECT * FROM t_order_item WHERE (user_id, order_id, order_item_id) in
+        <foreach item="item" index="index" collection="items" open="(" separator="," close=")">
+            (#{item.userId}, #{item.orderId}, #{item.orderItemId})
+        </foreach>
+    </select>
+
 
 <!--    <select id="selectInIds" resultMap="baseResultMap">-->
 <!--        SELECT i.* FROM t_order o, t_order_item i WHERE o.order_id = i.order_id and i.order_item_id in-->

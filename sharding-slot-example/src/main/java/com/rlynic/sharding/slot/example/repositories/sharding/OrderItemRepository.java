@@ -55,4 +55,8 @@ public interface OrderItemRepository extends CommonRepository<OrderItem, Long> {
     public List<OrderItem> selectManyNotInIds(@Param("ids") List<Long> ids, @Param("iids") List<Long> iids);
 
     public List<OrderItem> selectManyTableInIds(@Param("ids") List<Long> ids, @Param("oids") List<Long> oids);
+
+    public List<OrderItem> selectManyPKInIdsAlias(@Param("items") List<OrderItem> items);
+
+    public List<OrderItem> selectManyPKInIds(@Param("items") List<OrderItem> items);
 }
