@@ -34,6 +34,7 @@ import org.apache.shardingsphere.sql.parser.sql.common.segment.generic.Parameter
 import org.apache.shardingsphere.sql.parser.sql.common.segment.generic.table.SimpleTableSegment;
 import org.apache.shardingsphere.sql.parser.sql.common.statement.AbstractSQLStatement;
 import org.apache.shardingsphere.sql.parser.sql.common.statement.SQLStatement;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -143,12 +144,22 @@ public class ShardingRemoveInTokenGenerator implements CollectionSQLTokenGenerat
                 //((?,?,?),(?,?,?),(?,?,?)) 方式
                 List<ParameterMarkerSegment> itemParameterMarkers = parameterMarkerSegments.stream().filter(p -> p.getStartIndex()>item.getStartIndex())
                         .filter(p -> p.getStopIndex()< item.getStopIndex()).collect(Collectors.toList());
-                for(InColumnSegment inColumnSegment : inColumnSegments){
-                    if(inColumnSegment.getShardingKey()){
-                        ParameterMarkerSegment parameterMarkerSegment = itemParameterMarkers.get(inColumnSegment.getIndex());
-                        if(parameterMarkerSegment instanceof ParameterMarkerExpressionSegment){
-                            int mi = ((ParameterMarkerExpressionSegment) parameterMarkerSegment).getParameterMarkerIndex();
-                            routedb = match(parameters.get(mi));
+                //适配达梦数据库sql解析器（SQL92）无法识别ParameterMarkerSegment  目前已知msyql解析器可以识别，oracle sql92都无法识别
+                if(!CollectionUtils.isEmpty(itemParameterMarkers)) {
+                    for (InColumnSegment inColumnSegment : inColumnSegments) {
+                        if (inColumnSegment.getShardingKey()) {
+                            ParameterMarkerSegment parameterMarkerSegment = itemParameterMarkers.get(inColumnSegment.getIndex());
+                            if (parameterMarkerSegment instanceof ParameterMarkerExpressionSegment) {
+                                int mi = ((ParameterMarkerExpressionSegment) parameterMarkerSegment).getParameterMarkerIndex();
+                                routedb = match(parameters.get(mi));
+                            }
+                        }
+                    }
+                }else{
+                    //oracle、sql92 有限支持 单个((?,?,?))
+                    for (InColumnSegment inColumnSegment : inColumnSegments) {
+                        if (inColumnSegment.getShardingKey() && inColumnSegments.size()==parameters.size()) {
+                            routedb = match(parameters.get(inColumnSegment.getIndex()));
                         }
                     }
                 }

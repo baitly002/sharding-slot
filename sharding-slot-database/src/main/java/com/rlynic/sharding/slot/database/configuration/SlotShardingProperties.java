@@ -46,6 +46,8 @@ public class SlotShardingProperties implements Serializable {
     private String urlArgs;
     //是否打印分库后的sql
     private String sqlShow;
+    //数据库解析器类型 MySQL | Oracle | SQL92(匹配不到时)
+    private String databaseType = "MySQL";
     //sharding jdbc 的驱动
     private String driverClassName = "org.apache.shardingsphere.driver.ShardingSphereDriver";
     //sharding jdbc 的配置文件url

@@ -101,6 +101,7 @@ public class SpringClasspathDriverURLProvider implements ShardingSphereDriverURL
                     type: JDBC
                 props:
                   sql-show: ${slot.sharding.sqlShow:true}
+                  proxy-frontend-database-protocol-type: ${slot.sharding.databaseType:MySQL}
                 dataSources:
                 """)
                 .append(dbConfig(logicDatasourcePrefix, dbStartIndex, size, environment))

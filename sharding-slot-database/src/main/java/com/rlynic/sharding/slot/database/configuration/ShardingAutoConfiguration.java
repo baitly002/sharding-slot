@@ -5,6 +5,7 @@
  */
 package com.rlynic.sharding.slot.database.configuration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rlynic.sharding.slot.database.strategy.SlotDatabaseMatcher;
 import com.rlynic.sharding.slot.database.util.SpringBeanUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 import java.util.Map;
 
@@ -32,14 +34,26 @@ import java.util.Map;
 public class ShardingAutoConfiguration{
 
     @Bean
-    @ConditionalOnClass(RedisTemplate.class)
-    @ConditionalOnBean(RedisTemplate.class)
-    public SlotDatabaseMatcher slotDatabaseMatcherRedis(SlotShardingProperties slotShardingProperties, RedisTemplate redisTemplate){
+    @ConditionalOnClass(StringRedisTemplate.class)
+    @ConditionalOnBean(StringRedisTemplate.class)
+    public SlotDatabaseMatcher slotDatabaseMatcherRedis(SlotShardingProperties slotShardingProperties, StringRedisTemplate redisTemplate, ObjectMapper objectMapper){
         if(redisTemplate!=null){
+            String slotShardingPropertiesStr = null;
+            try {
+                slotShardingPropertiesStr = objectMapper.writeValueAsString(slotShardingProperties);
+            } catch (Exception e) {
+                log.error("无法序列化slotShardingProperties", e);
+            }
             String keySlot = "pan-server:slot";
             if(redisTemplate.hasKey(keySlot)){
                 //原已经有记录
-                SlotShardingProperties redidSlotProp = (SlotShardingProperties)redisTemplate.opsForValue().get(keySlot);
+                String slotStr = redisTemplate.opsForValue().get(keySlot);
+                SlotShardingProperties redidSlotProp = null;
+                try {
+                    redidSlotProp = objectMapper.readValue(slotStr, SlotShardingProperties.class);
+                } catch (Exception e) {
+                    log.error("无法解析slot redis缓存的json", e);
+                }
                 if(slotShardingProperties.getSize().intValue() == redidSlotProp.getSize().intValue()){
                     //分库大小一致
                     if(slotShardingProperties.getRange()!=null) {
@@ -62,20 +76,20 @@ public class ShardingAutoConfiguration{
                                 }
                             }
                         });
-                        redisTemplate.opsForValue().set(keySlot, slotShardingProperties);//替换旧配置
+                        redisTemplate.opsForValue().set(keySlot, slotShardingPropertiesStr);//替换旧配置
                     }else{
                         throw new RuntimeException("分库规则不能为空，请检查[slot.sharding.range]是否已经正确配置");
                     }
                 }else {
                     if(slotShardingProperties.getForceSharding()!=null && slotShardingProperties.getForceSharding()){
                         log.error("slot分库大小与之前的不一致，但已经强制刷新跳过处理！");
-                        redisTemplate.opsForValue().set(keySlot, slotShardingProperties);//替换旧配置
+                        redisTemplate.opsForValue().set(keySlot, slotShardingPropertiesStr);//替换旧配置
                     }else{
                         throw new RuntimeException("slot分库大小与之前的不一致，请检查确认！若需强制启动可配置[slot.sharding.force-sharding=true]");
                     }
                 }
             }else{
-                redisTemplate.opsForValue().set(keySlot, slotShardingProperties);//保存分库配置
+                redisTemplate.opsForValue().set(keySlot, slotShardingPropertiesStr);//保存分库配置
             }
         }
         return new SlotDatabaseMatcher(slotShardingProperties);
